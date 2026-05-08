@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Claude for Marketers — MCLT Leadership Review</title>
+<title>Claude for Marketers — Workshop series dashboard</title>
 <style>
   :root {
     --bg-page: #0a0a0a;
@@ -17,14 +17,10 @@
     --text-info: #85B7EB;
     --text-warning: #EF9F27;
     --border-tertiary: rgba(255,255,255,0.10);
-    --border-secondary: rgba(255,255,255,0.18);
     --border-info: #185FA5;
     --border-warning: #854F0B;
     --radius-md: 8px;
     --radius-lg: 12px;
-    --super-blue: #236CFF;
-    --honey: #F9C741;
-    --kiwi: #3BD85E;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
@@ -47,15 +43,28 @@
   .dashboard-eyebrow { font-size: 12px; color: var(--text-tertiary); }
   .divider { border-bottom: 0.5px solid var(--border-tertiary); margin: 0.75rem 0 1.25rem; }
 
+  /* Hero metric — Sylvia's ~800 framing leads */
+  .hero-metric {
+    background: linear-gradient(135deg, #1a2f5c 0%, #1a1a1a 100%);
+    border: 0.5px solid var(--border-info);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    margin-bottom: 12px;
+  }
+  .hero-metric .label { font-size: 12px; color: #B5D4F4; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+  .hero-metric .value { font-size: 56px; font-weight: 500; line-height: 1.1; margin-top: 6px; color: var(--text-primary); }
+  .hero-metric .value .small { font-size: 22px; color: var(--text-secondary); margin-left: 8px; }
+  .hero-metric .detail { font-size: 13px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+
   .metrics-row {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 12px; margin-bottom: 1.5rem;
   }
-  .metric-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 1rem; }
-  .metric-card .label { font-size: 13px; color: var(--text-secondary); }
-  .metric-card .value { font-size: 24px; font-weight: 500; margin-top: 4px; }
+  .metric-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 1rem 1.1rem; }
+  .metric-card .label { font-size: 12px; color: var(--text-secondary); }
+  .metric-card .value { font-size: 22px; font-weight: 500; margin-top: 4px; }
   .metric-card .value.success { color: var(--text-success); }
-  .metric-card .detail { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+  .metric-card .detail { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; line-height: 1.4; }
 
   .chart-card {
     background: var(--bg-primary); border: 0.5px solid var(--border-tertiary);
@@ -70,156 +79,44 @@
     border-radius: var(--radius-lg); padding: 1rem;
   }
 
-  .decisions-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 12px; margin-bottom: 1rem;
+  /* Pass 2 placeholder card */
+  .pass2-card {
+    background: var(--bg-primary);
+    border: 0.5px dashed var(--border-warning);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
   }
-  .decision-card {
-    background: var(--bg-primary); border: 0.5px solid var(--border-info);
-    border-radius: var(--radius-lg); padding: 1rem;
+  .pass2-card .pass2-label {
+    font-size: 11px; color: var(--text-warning); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
   }
-  .decision-card.warning { border-color: var(--border-warning); }
-  .decision-card .head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .decision-card .icon-bullet {
-    width: 18px; height: 18px; border-radius: 4px;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700;
-    color: var(--text-info); background: rgba(133,183,235,0.15);
-  }
-  .decision-card.warning .icon-bullet { color: var(--text-warning); background: rgba(239,159,39,0.15); }
-  .decision-card .title { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-  .decision-card .body { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .pass2-card .pass2-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 
-  .big-divider {
-    height: 1px; background: var(--border-tertiary);
-    margin: 3rem 0 2rem; position: relative;
-  }
-  .big-divider::after {
-    content: ''; position: absolute; left: 50%; top: -4px;
-    width: 8px; height: 8px; background: var(--super-blue);
-    border-radius: 50%; transform: translateX(-50%);
-  }
-
-  .part3-eyebrow {
-    font-size: 11px; font-weight: 700; color: var(--super-blue);
-    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px;
-  }
-  .part3-title { font-size: 26px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
-  .part3-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; }
-
-  .decisions-banner {
-    background: var(--super-blue); color: white;
-    padding: 18px 22px; border-radius: var(--radius-lg); margin-bottom: 24px;
-  }
-  .decisions-banner-label {
-    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85);
-    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;
-  }
-  .decisions-list { list-style: none; }
-  .decisions-list li {
-    padding-left: 36px; position: relative; font-size: 14px; color: white;
-    margin-bottom: 8px; line-height: 1.5;
-  }
-  .decisions-list li:last-child { margin-bottom: 0; }
-  .decisions-list li .num {
-    position: absolute; left: 0; top: 0;
-    width: 24px; height: 24px; background: white; color: var(--super-blue);
-    font-weight: 700; font-size: 12px; border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .hero-quote {
-    background: var(--bg-secondary); border-left: 4px solid var(--super-blue);
-    padding: 16px 20px; margin-bottom: 28px;
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  }
-  .hero-quote-label {
-    font-size: 11px; font-weight: 700; color: var(--super-blue);
-    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px;
-  }
-  .hero-quote-text { font-size: 16px; color: var(--text-primary); line-height: 1.5; }
-
-  .glance-row {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 12px; margin-bottom: 28px;
-  }
-  .glance-card {
-    background: var(--bg-secondary); border-left: 3px solid var(--super-blue);
-    padding: 14px 18px; border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  }
-  .glance-label {
-    font-size: 10px; font-weight: 700; color: var(--super-blue);
-    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
-  }
-  .glance-value { font-size: 20px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
-  .glance-detail { font-size: 12px; color: var(--text-secondary); }
-
-  h2.section-h { font-size: 18px; font-weight: 500; color: var(--text-primary); margin: 0 0 12px; }
-  h3.subsection-h {
-    font-size: 13px; font-weight: 700; color: var(--text-secondary);
-    margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.04em;
-  }
-
-  .agenda { border: 1px solid var(--border-tertiary); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 28px; }
-  .agenda-row { display: grid; grid-template-columns: 70px 1fr 140px; border-bottom: 1px solid var(--border-tertiary); }
-  .agenda-row:last-child { border-bottom: none; }
-  .agenda-row.header {
-    background: var(--super-blue); color: white;
-    font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
-  }
-  .agenda-row > div { padding: 12px 16px; font-size: 13px; }
-  .agenda-row.header .time-cell, .agenda-row.header .who-cell { color: white; }
-  .agenda-row .time-cell { color: var(--super-blue); font-weight: 700; font-size: 12px; }
-  .agenda-row .who-cell { color: var(--text-tertiary); font-size: 12px; }
-  .agenda-row strong { color: var(--text-primary); }
-  .agenda-body { color: var(--text-secondary); }
-  @media (max-width: 600px) { .agenda-row { grid-template-columns: 1fr; } }
-
-  .timeline-row {
-    display: grid; grid-template-columns: 110px 1fr;
-    margin-bottom: 8px; border-left: 3px solid var(--super-blue);
+  /* Methodology footer */
+  .methodology {
     background: var(--bg-secondary);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0; overflow: hidden;
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    margin-bottom: 1.5rem;
   }
-  .timeline-row.honey { border-left-color: var(--honey); }
-  .timeline-row.kiwi { border-left-color: var(--kiwi); }
-  .timeline-when {
-    padding: 12px 14px; font-size: 11px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    display: flex; align-items: center; color: var(--super-blue);
+  .methodology h4 {
+    font-size: 11px; color: var(--text-secondary); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
   }
-  .timeline-row.honey .timeline-when { color: var(--honey); }
-  .timeline-row.kiwi .timeline-when { color: var(--kiwi); }
-  .timeline-what { padding: 12px 14px; }
-  .timeline-what-title { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
-  .timeline-what-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
-  @media (max-width: 600px) { .timeline-row { grid-template-columns: 1fr; } }
-
-  .success-metrics {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 12px; margin-bottom: 28px;
+  .methodology ul { list-style: none; }
+  .methodology li {
+    font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;
+    padding-left: 14px; position: relative; line-height: 1.5;
   }
-  .success-card {
-    background: var(--bg-primary); border: 0.5px solid var(--border-tertiary);
-    border-radius: var(--radius-md); padding: 14px 18px;
+  .methodology li::before {
+    content: '·'; position: absolute; left: 0;
+    color: var(--text-tertiary); font-weight: 700;
   }
-  .success-label {
-    font-size: 11px; color: var(--super-blue); font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px;
-  }
-  .success-target { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
-  .success-target strong { color: var(--super-blue); }
-
-  .evidence-box {
-    background: var(--bg-secondary); border-radius: var(--radius-md);
-    padding: 16px 20px; margin-bottom: 28px;
-  }
-  .evidence-quote { font-size: 13px; color: var(--text-primary); font-style: italic; margin-bottom: 4px; line-height: 1.5; }
-  .evidence-source { font-size: 11px; color: var(--text-tertiary); margin-bottom: 12px; }
-  .evidence-source:last-child { margin-bottom: 0; }
+  .methodology strong { color: var(--text-primary); font-weight: 500; }
 
   .footer {
-    margin-top: 40px; padding-top: 16px;
+    margin-top: 32px; padding-top: 16px;
     border-top: 1px solid var(--border-tertiary);
     font-size: 11px; color: var(--text-tertiary); line-height: 1.7;
   }
@@ -227,266 +124,92 @@
 </head>
 <body>
 
-<!-- ============== PART 1: DASHBOARD ============== -->
-
 <div class="dashboard-head">
   <div>
     <div class="dashboard-title">Claude for marketers — workshop series</div>
-    <div class="dashboard-subtitle">Apr 22 (Part 1) + May 6, 2026 (Part 2) · TAM = 920 marketers &amp; communicators</div>
+    <div class="dashboard-subtitle">Apr 22 (Part 1) + May 6, 2026 (Part 2)</div>
   </div>
   <div class="dashboard-eyebrow">Marketing CD&amp;C</div>
 </div>
 
 <div class="divider"></div>
 
-<div class="section-label">Reach</div>
+<!-- Hero metric — Sylvia's ~800 framing -->
+<div class="hero-metric">
+  <div class="label">Reach across both sessions</div>
+  <div class="value">~800 <span class="small">participants</span></div>
+  <div class="detail">Total seats filled across both sessions, including conference-room joins. The number Sylvia shared in #cmty-claude.</div>
+</div>
+
+<!-- Supporting reconciliation -->
 <div class="metrics-row">
   <div class="metric-card">
-    <div class="label">TAM reach</div>
-    <div class="value">59%</div>
-    <div class="detail">543 of 920</div>
-  </div>
-  <div class="metric-card">
-    <div class="label">Unique attendees</div>
+    <div class="label">Unique people</div>
     <div class="value">578</div>
-    <div class="detail">across both sessions</div>
+    <div class="detail">de-duplicated by email · returners count once</div>
   </div>
   <div class="metric-card">
     <div class="label">Returned for Part 2</div>
     <div class="value">38%</div>
-    <div class="detail">173 of 450</div>
+    <div class="detail">173 came back for both</div>
   </div>
   <div class="metric-card">
-    <div class="label">NPS (live poll, n=67)</div>
+    <div class="label">NPS — live poll</div>
     <div class="value success">+43</div>
-    <div class="detail">+63 post-survey n=16</div>
+    <div class="detail">n=67 · +63 post-survey n=16</div>
+  </div>
+  <div class="metric-card">
+    <div class="label">Mean stay</div>
+    <div class="value">47 min</div>
+    <div class="detail">49 min Part 1 · 45 min Part 2</div>
   </div>
 </div>
 
+<!-- Funnel -->
 <div class="section-label">Attendance funnel</div>
 <div class="chart-card">
-  <div class="chart-canvas-wrap" style="height: 230px;">
-    <canvas id="funnelChart" role="img" aria-label="Funnel from TAM 920 to attended both 173">TAM 920 → at least one session 543 → both sessions 173.</canvas>
+  <div class="chart-canvas-wrap" style="height: 260px;">
+    <canvas id="funnelChart" role="img" aria-label="Attendance funnel from raw participants down to people who stayed for 60 minutes or more">Raw 848 → Unique 578 → Both sessions 173 → Stayed >60 min in Part 2 77.</canvas>
   </div>
 </div>
 
-<div class="two-col">
-  <div>
-    <div class="section-label">Penetration by Level-2 org</div>
-    <div class="chart-card-sm">
-      <div class="chart-canvas-wrap" style="height: 260px;">
-        <canvas id="orgChart" role="img" aria-label="Penetration by org">People &amp; Places 95%, CG 57%, Commercial 53%, CEO Transformation 45%, Customer Success 36%, SBG 17%.</canvas>
-      </div>
-    </div>
-  </div>
-  <div>
-    <div class="section-label">Self-rated confidence after Part 2 (n=67)</div>
-    <div class="chart-card-sm">
-      <div class="chart-canvas-wrap" style="height: 260px;">
-        <canvas id="confidenceChart" role="img" aria-label="Confidence ratings 1-5 across three learning objectives">Build a Skill 3.7, Cowork 3.8, Decision framework 3.6.</canvas>
-      </div>
-    </div>
+<!-- Pass 2 placeholder for marketing/comms drill-down -->
+<div class="pass2-card">
+  <div class="pass2-label">Coming in next pass</div>
+  <div class="pass2-text">
+    <strong style="color: var(--text-primary);">Function-level breakdown — Marketing % vs Communications %, then drillable to VP-level.</strong>
+    Once we confirm the Marketing-vs-Communications TAM split (920 total — how many of those are marketers vs. communicators?), this section will replace the placeholder org-bar chart with a two-tier view: function totals at top, expandable to E2 / VP attendance underneath.
   </div>
 </div>
 
-<div class="section-label">What people brought to the chat — themes from 33 questions, 56 friction &amp; feedback signals</div>
+<!-- Confidence (kept as-is) -->
+<div class="section-label">Self-rated confidence after Part 2 (n=67)</div>
+<div class="chart-card">
+  <div class="chart-canvas-wrap" style="height: 260px;">
+    <canvas id="confidenceChart" role="img" aria-label="Stacked bar of self-rated confidence ratings 1-5 across three learning objectives">Build a Skill 3.7 mean, Use Cowork 3.8, Decision framework 3.6.</canvas>
+  </div>
+</div>
+
+<!-- THEMES — RELABELED per leadership feedback -->
+<div class="section-label">Chat sentiment &amp; friction signals — what surfaced live</div>
 <div class="chart-card">
   <div class="chart-canvas-wrap" style="height: 320px;">
-    <canvas id="themeChart" role="img" aria-label="Themes from chat">Connector friction 12, pace 9, skill creation 7, audience relevance 6, momentum 6.</canvas>
+    <canvas id="themeChart" role="img" aria-label="Bar chart of friction and sentiment signals from chat: connector friction 12, pace and cognitive load 9, skill creation 7, audience-specific relevance 6, positive momentum 6, cowork vs code vs chat 4, project memory 4, governance 3, documentation 3, contractor access 2.">Connector friction 12, pace 9, skill creation 7, audience relevance 6, positive momentum 6, decision framework 4, memory 4, governance 3, docs 3, contractor access 2.</canvas>
   </div>
 </div>
 
-<div class="section-label">What leadership should decide</div>
-<div class="decisions-grid">
-  <div class="decision-card">
-    <div class="head">
-      <span class="icon-bullet">◎</span>
-      <span class="title">Part 3: branding with AI</span>
-    </div>
-    <div class="body">Requested by name in chat and survey. Pairs with the open question about deck output not matching brand.</div>
-  </div>
-  <div class="decision-card">
-    <div class="head">
-      <span class="icon-bullet">◎</span>
-      <span class="title">BU-tailored sessions</span>
-    </div>
-    <div class="body">"Just for Credit Karma marketing" / "team up with CG local leads." Comms team feels uncatered for.</div>
-  </div>
-  <div class="decision-card warning">
-    <div class="head">
-      <span class="icon-bullet">!</span>
-      <span class="title">Connector experience</span>
-    </div>
-    <div class="body">12 in-session friction reports on Drive, folders, permissions. Native Sheets/Slides + Asana flagged.</div>
-  </div>
-  <div class="decision-card warning">
-    <div class="head">
-      <span class="icon-bullet">!</span>
-      <span class="title">Pace &amp; focus time</span>
-    </div>
-    <div class="body">9 attendees said "too fast" or "no time to practice." Office hours pattern is the right fix.</div>
-  </div>
-</div>
-
-<!-- ============== DIVIDER ============== -->
-<div class="big-divider"></div>
-
-<!-- ============== PART 2: PART 3 PROPOSAL ============== -->
-
-<div class="part3-eyebrow">Marketing · Craft Development &amp; Capabilities</div>
-<div class="part3-title">Part 3 proposal &amp; 90-day activation</div>
-<div class="part3-subtitle">Branding with AI · BU cohort pilots · Connector pull-through</div>
-
-<div class="decisions-banner">
-  <div class="decisions-banner-label">What we're asking MCLT to decide</div>
-  <ol class="decisions-list">
-    <li><span class="num">1</span>Greenlight Part 3 — Branding with AI — for Q3 2026.</li>
-    <li><span class="num">2</span>Co-sponsor two BU-cohort pilots: Credit Karma marketing + CG with local leads.</li>
-    <li><span class="num">3</span>Pull through the connector roadmap with T4i (Tableau, Sheets, Slides, Asana).</li>
-  </ol>
-</div>
-
-<div class="hero-quote">
-  <div class="hero-quote-label">Why this proposal · Strongest unprompted signal</div>
-  <div class="hero-quote-text">"3rd session on branding with AI perhaps?" — Session 2 chat. Paired with skepticism that current Claude outputs match Intuit brand. The fix is upstream.</div>
-</div>
-
-<div class="glance-row">
-  <div class="glance-card">
-    <div class="glance-label">Series so far</div>
-    <div class="glance-value">578 unique</div>
-    <div class="glance-detail">59% of 920-marketer TAM · +43 NPS · 38% return</div>
-  </div>
-  <div class="glance-card">
-    <div class="glance-label">Strongest ask</div>
-    <div class="glance-value">Branding with AI</div>
-    <div class="glance-detail">Named explicitly in chat · pairs with brand-fidelity skepticism</div>
-  </div>
-  <div class="glance-card">
-    <div class="glance-label">Biggest unlock</div>
-    <div class="glance-value">BU cohorts</div>
-    <div class="glance-detail">47% of Commercial · 43% of CG marketers untouched</div>
-  </div>
-</div>
-
-<h2 class="section-h">Part 3 — Branding with AI</h2>
-<p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.6;">A 90-minute hands-on session that solves the brand-fidelity gap surfaced in Parts 1 and 2. Co-delivered with Karen Weiss (Brand Voice) and the Intuit Brand Portal team. Open to the full TAM. Target Q3 2026.</p>
-
-<h3 class="subsection-h">Session arc</h3>
-<div class="agenda">
-  <div class="agenda-row header">
-    <div>Time</div>
-    <div>Block</div>
-    <div>Driver</div>
-  </div>
-  <div class="agenda-row">
-    <div class="time-cell">0:00</div>
-    <div class="agenda-body"><strong>Brand voice grounding.</strong> Add Karen Weiss's Brand Voice Doc and the Intuit Brand Portal as Project context. Set guardrails that travel across chats.</div>
-    <div class="who-cell">Karen Weiss + CD&amp;C</div>
-  </div>
-  <div class="agenda-row">
-    <div class="time-cell">0:15</div>
-    <div class="agenda-body"><strong>Live exercise — copy across brands.</strong> One campaign idea, four brand voices: IES, QBO, TurboTax, Mailchimp. Attendees test how voice shifts when context is right.</div>
-    <div class="who-cell">Sylvia + Karen</div>
-  </div>
-  <div class="agenda-row">
-    <div class="time-cell">0:40</div>
-    <div class="agenda-body"><strong>Visual brand fidelity Skill.</strong> Build a Skill that enforces colors, typography, corner radius. Fix the "sharp corners vs. rounded" complaint head-on.</div>
-    <div class="who-cell">Chris Koussis</div>
-  </div>
-  <div class="agenda-row">
-    <div class="time-cell">1:00</div>
-    <div class="agenda-body"><strong>Brand-safety pre-flight.</strong> Use Claude as a brand-safety checker before Legal review. The pattern that answers "where does an AI draft enter our review process?"</div>
-    <div class="who-cell">Brand Portal team</div>
-  </div>
-  <div class="agenda-row">
-    <div class="time-cell">1:15</div>
-    <div class="agenda-body"><strong>Q&amp;A + office hours hand-off.</strong> Set expectations for ongoing support. Plug Ikezi's office hours.</div>
-    <div class="who-cell">Ikezi + CD&amp;C</div>
-  </div>
-</div>
-
-<h2 class="section-h">90-day activation roadmap</h2>
-<p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.6;">Three are CD&amp;C's to run. Two require MCLT to unlock.</p>
-
-<div style="margin-bottom: 28px;">
-  <div class="timeline-row">
-    <div class="timeline-when">May 2026</div>
-    <div class="timeline-what">
-      <div class="timeline-what-title">Publish living FAQ + recurring office hours</div>
-      <div class="timeline-what-detail">CD&amp;C + Ikezi · 2 slots/week. Solves the "too fast" feedback by giving time, not by re-teaching.</div>
-    </div>
-  </div>
-  <div class="timeline-row">
-    <div class="timeline-when">May 2026</div>
-    <div class="timeline-what">
-      <div class="timeline-what-title">Connector escalation memo to T4i</div>
-      <div class="timeline-what-detail">CD&amp;C → T4i. Verbatim attendee evidence. MCLT pull-through requested for Tableau, Sheets, Slides, Asana.</div>
-    </div>
-  </div>
-  <div class="timeline-row honey">
-    <div class="timeline-when">June 2026</div>
-    <div class="timeline-what">
-      <div class="timeline-what-title">MCLT-sponsored BU pilot kickoffs</div>
-      <div class="timeline-what-detail">Credit Karma marketing + CG. CD&amp;C scopes BU-specific examples and pre-built Skills.</div>
-    </div>
-  </div>
-  <div class="timeline-row honey">
-    <div class="timeline-when">July 2026</div>
-    <div class="timeline-what">
-      <div class="timeline-what-title">Run the BU cohort sessions</div>
-      <div class="timeline-what-detail">Same content arc as Parts 1+2, BU-relevant Skills, local leads co-hosting. Target: 70% TAM penetration in those two BUs.</div>
-    </div>
-  </div>
-  <div class="timeline-row kiwi">
-    <div class="timeline-when">Aug-Sep 2026</div>
-    <div class="timeline-what">
-      <div class="timeline-what-title">Part 3: Branding with AI — open session</div>
-      <div class="timeline-what-detail">Co-presented with Karen Weiss + Intuit Brand Portal. Returns to the full TAM.</div>
-    </div>
-  </div>
-</div>
-
-<h2 class="section-h">How we'll know it worked</h2>
-<div class="success-metrics">
-  <div class="success-card">
-    <div class="success-label">Reach</div>
-    <div class="success-target"><strong>≥65%</strong> of 920-marketer TAM attends Part 3 (vs. 49% Part 1, 33% Part 2).</div>
-  </div>
-  <div class="success-card">
-    <div class="success-label">BU penetration</div>
-    <div class="success-target"><strong>≥70%</strong> in Credit Karma marketing and CG cohorts (vs. 54% / 57% today).</div>
-  </div>
-  <div class="success-card">
-    <div class="success-label">Brand confidence</div>
-    <div class="success-target">Post-session item: <strong>≥4 of 5</strong> on "I can produce on-brand outputs with Claude."</div>
-  </div>
-  <div class="success-card">
-    <div class="success-label">Friction</div>
-    <div class="success-target">Connector and permission complaints in chat: <strong>≤3 mentions</strong> (vs. 12 in Part 2).</div>
-  </div>
-</div>
-
-<h2 class="section-h">Evidence base</h2>
-<div class="evidence-box">
-  <div class="evidence-quote">"3rd session on branding with AI perhaps?"</div>
-  <div class="evidence-source">— Session 2 chat (organic ask, unprompted)</div>
-
-  <div class="evidence-quote">"Is there a way to ensure the deck design is aligned to Intuit brand guidelines?"</div>
-  <div class="evidence-source">— Session 2 chat</div>
-
-  <div class="evidence-quote">"Does the skill work 100%? Even with template, doesn't have exact font and designs are slightly off — sharp corners vs. rounded."</div>
-  <div class="evidence-source">— Session 2 chat</div>
-
-  <div class="evidence-quote">"More of this please. Ideally tailored for different biz units. Could we do this just for Credit Karma marketing?"</div>
-  <div class="evidence-source">— Post-session feedback</div>
-
-  <div class="evidence-quote">"We went through the materials very quickly and when I had issues getting Claude to recognize the input files (like so many other attendees) I easily fell behind."</div>
-  <div class="evidence-source">— Session 2 post-survey verbatim</div>
+<!-- Methodology -->
+<div class="methodology">
+  <h4>How to read these numbers</h4>
+  <ul>
+    <li><strong>~800 participants</strong> = total seats filled across both sessions (raw Zoom joins, includes conference-room logins where multiple people share one connection). Use this for "how big was the splash."</li>
+    <li><strong>578 unique people</strong> = de-duplicated by lowercased email. A person attending both sessions counts once. Use this for "how many distinct marketers we reached."</li>
+    <li><strong>+43 NPS (live poll)</strong> is more conservative than +63 (post-survey) because the post-survey self-selects engaged attendees. Live poll is the honest number.</li>
+    <li><strong>Sources:</strong> Zoom attendance (Apr 22 + May 6) · Live poll n=67 · Post-survey n=16 · Zoom chat log (May 6, 249 raw → 139 substantive → 40 questions → 56 themed signals).</li>
+  </ul>
 </div>
 
 <div class="footer">
-  Sources: Zoom attendance (Apr 22 + May 6) · Workday roster (Apr 8) · TAM list (920) · Live poll (n=67) · Post-survey (n=16) · Zoom chat log (May 6, 249 messages → 139 substantive → 40 questions).<br>
   Marketing Craft Development &amp; Capabilities · Intuit Confidential and Proprietary
 </div>
 
@@ -507,15 +230,21 @@
   Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
   Chart.defaults.font.family = "'Avenir Next', 'Aptos', sans-serif";
 
+  // FUNNEL — restructured to lead with Sylvia's framing
   var f = document.getElementById('funnelChart');
   if (f) new Chart(f, {
     type: 'bar',
     data: {
-      labels: ['TAM (marketers & comms)', 'Attended Part 1', 'Attended Part 2', 'Attended both', 'Stayed >60 min in Part 2'],
+      labels: [
+        'Raw participants (~800)',
+        'Unique people (578)',
+        'Attended both sessions (173)',
+        'Stayed >60 min in Part 2 (77)'
+      ],
       datasets: [{
         label: 'People',
-        data: [920, 450, 301, 173, 77],
-        backgroundColor: [C.grayLight, C.blueLight, C.blue, C.teal, C.tealLight],
+        data: [800, 578, 173, 77],
+        backgroundColor: [C.blueLight, C.blue, C.teal, C.tealLight],
         borderWidth: 0
       }]
     },
@@ -533,43 +262,18 @@
     }
   });
 
-  var o = document.getElementById('orgChart');
-  if (o) new Chart(o, {
-    type: 'bar',
-    data: {
-      labels: ['People & Places', 'CG (Notarainni)', 'Commercial (Johnson)', 'CEO Transformation', 'Customer Success', 'SBG'],
-      datasets: [{
-        label: '% of TAM attended',
-        data: [95, 57, 53, 45, 36, 17],
-        backgroundColor: [C.teal, C.blue, C.blue, C.amber, C.amber, C.red],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: function(ctx){ return ctx.parsed.x + '% reach'; } } }
-      },
-      scales: {
-        x: { beginAtZero: true, max: 100, ticks: { callback: function(v){ return v + '%'; } } },
-        y: { ticks: { font: { size: 11 } } }
-      }
-    }
-  });
-
+  // CONFIDENCE — unchanged
   var cf = document.getElementById('confidenceChart');
   if (cf) new Chart(cf, {
     type: 'bar',
     data: {
       labels: ['Build a Skill', 'Use Cowork', 'Decision framework'],
       datasets: [
-        { label: '5', data: [24, 22, 18], backgroundColor: C.teal, borderWidth: 0 },
+        { label: '5 — very confident', data: [24, 22, 18], backgroundColor: C.teal, borderWidth: 0 },
         { label: '4', data: [17, 23, 23], backgroundColor: C.tealLight, borderWidth: 0 },
         { label: '3', data: [17, 12, 13], backgroundColor: C.grayLight, borderWidth: 0 },
         { label: '2', data: [3,  6,  7],  backgroundColor: C.amberLight, borderWidth: 0 },
-        { label: '1 / 0', data: [6, 4, 6], backgroundColor: C.red, borderWidth: 0 }
+        { label: '1 / 0 — not confident', data: [6, 4, 6], backgroundColor: C.red, borderWidth: 0 }
       ]
     },
     options: {
@@ -586,6 +290,7 @@
     }
   });
 
+  // THEMES
   var t = document.getElementById('themeChart');
   if (t) new Chart(t, {
     type: 'bar',
