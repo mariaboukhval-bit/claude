@@ -1,0 +1,2395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Transformation — MCD&C Leadership Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ─── MCD&C BRAND TOKENS ─── */
+  :root {
+    --super-blue:    #236CFF;
+    --super-blue-d:  #1A52CC;
+    --super-blue-l:  #5B91FF;
+    --blueberry-110: #00254A;
+    --agave-30:      #81F2FE;
+    --agave-20:      #C2F5FF;
+    --wintermint:    #EFF4F9;
+    --tofu:          #F4F4EF;
+    --white:         #FFFFFF;
+    --olive-10:      #E7FDC8;
+    --honey-10:      #FFF2C1;
+    --honey-40:      #F9C741;
+    --honey-80:      #AC6500;
+    --kiwi-50:       #3BD85E;
+    --spearmint-110: #003E31;
+    --tomato:        #FF5C37;
+    --watermelon-110:#4F0513;
+    --ink:       var(--blueberry-110);
+    --ink-soft:  #1A3960;
+    --muted:     #5A6B82;
+    --muted-soft:#9AAABF;
+    --rule:      #D6E0EC;
+    --rule-soft: #E8EEF5;
+    --bar-friction:    var(--tomato);
+    --bar-capability:  var(--super-blue);
+    --bar-audience:    var(--honey-40);
+    --bar-positive:    var(--kiwi-50);
+    --bar-process:     var(--muted);
+    --bar-blocker:     var(--watermelon-110);
+    --font-sans: 'Avenir Next', 'Avenir Next for Intuit', 'Nunito Sans', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --shadow-sm: 0 1px 2px rgba(0, 37, 74, 0.04);
+    --shadow-md: 0 2px 6px rgba(0, 37, 74, 0.05);
+    --shadow-lg: 0 4px 12px rgba(0, 37, 74, 0.06);
+    --shadow-xl: 0 8px 20px rgba(0, 37, 74, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-sans); color: var(--ink); background: var(--wintermint);
+    line-height: 1.5; font-size: 15px; font-weight: 400;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; position: relative;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none;
+    z-index: 0;
+  }
+  .shell { max-width: 1180px; margin: 0 auto; padding: 48px 48px 80px; position: relative; z-index: 1; }
+
+  /* ─── Brand bar ─── */
+  .brandbar {
+    position: sticky; top: 0;
+    background: rgba(239, 244, 249, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    z-index: 100; padding: 18px 48px;
+    display: flex; align-items: center; gap: 32px;
+  }
+  .lockup { display: flex; flex-direction: column; line-height: 1.15; }
+  .lockup__top { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--super-blue); text-transform: uppercase; }
+  .lockup__bottom { font-size: 15px; font-weight: 400; color: var(--super-blue); letter-spacing: -0.005em; }
+  .live-pulse {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 10px 5px 8px; border-radius: 999px;
+    background: var(--olive-10); margin-left: 16px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--spearmint-110);
+  }
+  .live-pulse__dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--kiwi-50);
+    box-shadow: 0 0 0 0 rgba(59, 216, 94, 0.7); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(59, 216, 94, 0.5); }
+    70% { box-shadow: 0 0 0 6px rgba(59, 216, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 216, 94, 0); }
+  }
+  .brandbar__tabs { display: flex; gap: 4px; margin-left: auto; }
+  .tab-btn {
+    appearance: none; background: transparent; border: none;
+    font-family: var(--font-sans); font-size: 13px; font-weight: 600;
+    color: var(--muted); padding: 9px 18px; border-radius: 999px; cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); letter-spacing: -0.005em;
+  }
+  .tab-btn:hover { color: var(--ink); background: var(--rule-soft); }
+  .tab-btn.is-active {
+    color: var(--white); background: var(--super-blue);
+  }
+
+  /* ─── Panels ─── */
+  .tab-panel { display: none; }
+  .tab-panel.is-active { display: block; animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Reveal ─── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── Masthead ─── */
+  .masthead {
+    border-top: 4px solid var(--super-blue); padding-top: 28px; margin-bottom: 40px;
+  }
+  .masthead__copy { min-width: 0; }
+  .masthead__kicker {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--super-blue); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .masthead__kicker::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--super-blue), transparent); max-width: 200px;
+  }
+  .masthead__title {
+    font-weight: 400; font-size: 52px; line-height: 1.05;
+    letter-spacing: -0.025em; color: var(--super-blue); margin-bottom: 18px;
+  }
+  .masthead__title strong { font-weight: 700; }
+  .masthead__byline {
+    display: flex; flex-wrap: wrap; gap: 8px 20px;
+    font-size: 13px; color: var(--muted); font-weight: 500;
+  }
+  .masthead__byline span { display: inline-flex; align-items: center; gap: 8px; }
+  .masthead__byline span:not(:last-child)::after {
+    content: '·'; color: var(--muted-soft); margin-left: 20px;
+  }
+
+  /* ─── Headline ─── */
+  .headline {
+    background: var(--blueberry-110);
+    color: var(--white); padding: 32px 36px; border-radius: 8px;
+    margin-bottom: 56px; position: relative; overflow: hidden;
+  }
+  .headline__kicker {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--agave-30); margin-bottom: 12px;
+  }
+  .headline__text {
+    font-size: 26px; font-weight: 400; line-height: 1.3;
+    letter-spacing: -0.015em; color: var(--white);
+  }
+  .headline__text strong {
+    font-weight: 700; color: var(--agave-30);
+  }
+
+  /* ─── Section ─── */
+  .section { margin-bottom: 64px; position: relative; }
+  .section__header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 28px; padding-bottom: 14px; border-bottom: 1px solid var(--rule);
+  }
+  .section__num { font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--super-blue); letter-spacing: 0.08em; }
+  .section__title { font-weight: 400; font-size: 28px; letter-spacing: -0.015em; color: var(--super-blue); }
+  .section__lede {
+    font-size: 14px; color: var(--muted); margin-left: auto;
+    max-width: 360px; text-align: right; line-height: 1.5; font-weight: 500;
+  }
+
+  /* ─── Metric def chip ─── */
+  .metric-def-chip {
+    display: inline-block; font-family: var(--font-mono); font-size: 10px;
+    font-weight: 500; letter-spacing: 0.02em; color: var(--super-blue);
+    background: var(--agave-20); padding: 2px 8px; border-radius: 4px;
+    margin-top: 2px; line-height: 1.4; cursor: help;
+    transition: all 0.25s ease; border: 1px solid transparent;
+  }
+  .metric-def-chip:hover {
+    background: var(--super-blue); color: var(--white);
+    transform: translateY(-1px); box-shadow: 0 4px 8px rgba(35, 108, 255, 0.25);
+  }
+  .metric-def-chip--pulse { animation: chipPulse 3s ease-in-out infinite; }
+  @keyframes chipPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(35, 108, 255, 0); }
+    50% { box-shadow: 0 0 0 4px rgba(35, 108, 255, 0.08); }
+  }
+
+  /* ─── Reach hero ─── */
+  .reach { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 16px; }
+  .reach__cell {
+    background: var(--white); padding: 32px 28px; border-radius: 8px;
+    border: 1px solid var(--rule); position: relative; overflow: hidden;
+    transition: border-color 0.25s ease;
+  }
+  .reach__cell:hover { border-color: var(--super-blue); }
+  .reach__cell--hero {
+    background: var(--white);
+  }
+  .reach__cell--hero::before {
+    content: ''; position: absolute; left: 28px; top: 28px;
+    width: 32px; height: 3px;
+    background: var(--super-blue); border-radius: 999px;
+  }
+  .reach__label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--super-blue);
+    margin-bottom: 14px; padding-top: 10px;
+    display: flex; align-items: center; flex-wrap: wrap;
+  }
+  .reach__cell:not(.reach__cell--hero) .reach__label { color: var(--muted); }
+  .reach__num {
+    font-weight: 400; font-size: 84px; line-height: 0.95; letter-spacing: -0.04em;
+    color: var(--super-blue);
+    margin-bottom: 10px; font-variant-numeric: tabular-nums;
+    position: relative; z-index: 1;
+  }
+  .reach__cell:not(.reach__cell--hero) .reach__num {
+    font-size: 56px;
+    color: var(--ink);
+  }
+  .reach__sub { font-size: 12.5px; color: var(--muted); line-height: 1.55; position: relative; z-index: 1; }
+  .reach__cell--hero .reach__sub { color: var(--ink-soft); max-width: 92%; }
+  .reach__def-chip {
+    display: inline-block; margin-top: 12px;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+    color: var(--super-blue); background: var(--agave-20);
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .reach__note {
+    margin-top: 12px; padding: 8px 10px;
+    background: var(--honey-10); border-left: 3px solid var(--honey-40);
+    border-radius: 4px;
+    font-size: 11px; line-height: 1.45; color: var(--ink);
+    font-style: italic;
+  }
+  .reach__note strong {
+    font-style: normal; font-weight: 700; color: var(--honey-80);
+    text-transform: uppercase; font-size: 9.5px; letter-spacing: 0.08em;
+    margin-right: 4px;
+  }
+
+  /* ─── Venn diagram for session overlap ─── */
+  .venn {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px; padding-top: 6px;
+  }
+  .venn__svg {
+    width: 100%; max-width: 240px; height: auto;
+    overflow: visible;
+  }
+  .venn__circle-s1 {
+    fill: var(--super-blue);
+    fill-opacity: 0.22;
+    stroke: var(--super-blue);
+    stroke-width: 1.5;
+  }
+  .venn__circle-s2 {
+    fill: var(--kiwi-50);
+    fill-opacity: 0.22;
+    stroke: var(--spearmint-110);
+    stroke-width: 1.5;
+  }
+  .venn__num {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+  .venn__num--main { font-size: 26px; }
+  .venn__num--overlap { font-size: 18px; fill: var(--ink); }
+  .venn__num--s1 { fill: var(--super-blue); }
+  .venn__num--s2 { fill: var(--spearmint-110); }
+  .venn__label {
+    font-family: var(--font-sans); font-size: 9px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-anchor: middle; fill: var(--muted);
+  }
+  .venn__legend {
+    display: flex; flex-direction: column; gap: 4px;
+    font-size: 11px; color: var(--muted); line-height: 1.5;
+    width: 100%;
+  }
+  .venn__legend-row { display: flex; align-items: center; gap: 8px; }
+  .venn__legend-swatch {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .venn__legend-text { color: var(--ink); font-weight: 500; font-size: 11.5px; }
+  .venn__legend-count {
+    margin-left: auto; font-family: var(--font-mono);
+    font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── NPS arc ─── */
+  .nps-arc {
+    width: 100%; height: 8px;
+    background: linear-gradient(90deg, var(--tomato) 0%, var(--honey-40) 50%, var(--kiwi-50) 100%);
+    border-radius: 999px; position: relative; margin-top: 6px; overflow: visible;
+  }
+  .nps-arc__indicator {
+    position: absolute; top: 50%; left: 0;
+    width: 14px; height: 14px; background: var(--white);
+    border: 2.5px solid var(--blueberry-110); border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s; z-index: 2;
+  }
+
+  /* ─── Comparison table ─── */
+  .compare {
+    border: 1px solid var(--rule); border-radius: 8px; overflow: hidden;
+    background: var(--white);
+  }
+  .compare__row {
+    display: grid; grid-template-columns: 1.5fr 1.1fr 1.1fr 0.8fr 0.9fr 1.8fr;
+    gap: 0; border-bottom: 1px solid var(--rule); transition: background 0.3s ease;
+  }
+  .compare__row:last-child { border-bottom: none; }
+  .compare__row--head { background: var(--blueberry-110); color: var(--white); }
+  .compare__row:not(.compare__row--head):hover { background: var(--wintermint); }
+  .compare__row:not(.compare__row--head):hover .compare__cell--insight {
+    color: var(--ink); font-weight: 500;
+  }
+  .compare__cell {
+    padding: 18px 20px; font-size: 13px; border-right: 1px solid var(--rule);
+    display: flex; align-items: center; transition: all 0.3s ease;
+  }
+  .compare__row--head .compare__cell {
+    border-right: 1px solid rgba(255,255,255,0.12);
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: rgba(255,255,255,0.92); padding: 14px 20px;
+  }
+  .compare__cell:last-child { border-right: none; }
+  .compare__cell--label {
+    background: var(--wintermint);
+    flex-direction: column; align-items: flex-start; gap: 4px;
+  }
+  .compare__cell--label .label-main { font-weight: 600; font-size: 13.5px; color: var(--ink); }
+  .compare__cell--metric {
+    font-size: 32px; font-weight: 400;
+    color: var(--super-blue);
+    letter-spacing: -0.02em; justify-content: center;
+    font-variant-numeric: tabular-nums; cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative; flex-direction: column; gap: 4px;
+  }
+  .compare__cell--metric:hover { transform: scale(1.04); color: var(--super-blue-d); }
+  .compare__cell--metric .metric-value { line-height: 1; }
+  .compare__cell--metric .nps-arc { width: 90px; height: 5px; margin-top: 6px; }
+  .compare__cell--metric .nps-arc__indicator { width: 10px; height: 10px; border-width: 2px; }
+  .compare__cell--metric .nps-arc__indicator::after { display: none; }
+  .compare__cell--delta {
+    font-size: 18px; font-weight: 700; color: var(--honey-80);
+    background: var(--honey-10); justify-content: center;
+  }
+  .compare__cell--avg {
+    font-size: 16px; font-weight: 600; color: var(--spearmint-110);
+    background: var(--olive-10); justify-content: center;
+  }
+  .compare__cell--insight {
+    font-size: 12.5px; color: var(--muted); line-height: 1.45;
+    transition: color 0.3s ease, font-weight 0.3s ease;
+  }
+  .compare__methodology {
+    padding: 14px 20px; background: var(--agave-20);
+    font-size: 11.5px; color: var(--ink); line-height: 1.55;
+    border-top: 1px solid var(--rule);
+  }
+  .compare__methodology strong {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--super-blue); margin-right: 8px;
+  }
+
+  /* ─── Modal ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0, 37, 74, 0.55);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal-overlay.is-open { opacity: 1; visibility: visible; }
+  .modal {
+    background: var(--white); border-radius: 16px;
+    max-width: 640px; width: 100%; max-height: 90vh; overflow-y: auto;
+    box-shadow: var(--shadow-xl); transform: scale(0.94) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border-top: 4px solid var(--super-blue);
+  }
+  .modal-overlay.is-open .modal { transform: scale(1) translateY(0); }
+  .modal__head {
+    padding: 28px 32px 16px;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 24px;
+  }
+  .modal__kicker {
+    font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--super-blue); margin-bottom: 6px;
+  }
+  .modal__title {
+    font-size: 28px; font-weight: 400; letter-spacing: -0.015em;
+    color: var(--super-blue); line-height: 1.1;
+  }
+  .modal__close {
+    appearance: none; border: 1px solid var(--rule); background: var(--white);
+    width: 36px; height: 36px; border-radius: 50%;
+    font-size: 18px; color: var(--muted); cursor: pointer; flex-shrink: 0;
+    transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal__close:hover {
+    background: var(--super-blue); color: var(--white);
+    border-color: var(--super-blue); transform: rotate(90deg);
+  }
+  .modal__body { padding: 8px 32px 32px; }
+  .modal__definition { font-size: 15px; line-height: 1.55; color: var(--ink); margin-bottom: 24px; }
+  .modal__definition strong { color: var(--super-blue); font-weight: 700; }
+  .modal__section-title {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--super-blue);
+    margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--rule);
+  }
+  .modal__formula {
+    font-family: var(--font-mono); font-size: 13px;
+    background: linear-gradient(135deg, var(--blueberry-110) 0%, var(--super-blue-d) 100%);
+    color: var(--agave-20); padding: 18px 20px; border-radius: 8px;
+    margin-bottom: 24px; line-height: 1.7;
+  }
+  .modal__formula strong { color: var(--white); font-weight: 600; }
+  .modal__example {
+    background: var(--olive-10); border-left: 3px solid var(--spearmint-110);
+    padding: 16px 20px; border-radius: 4px;
+    font-size: 13px; line-height: 1.55; color: var(--ink); font-style: italic;
+  }
+  .modal__example strong { color: var(--spearmint-110); font-style: normal; font-weight: 700; }
+  .modal__benchmarks {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 24px;
+  }
+  .modal__benchmark {
+    text-align: center; padding: 14px 8px;
+    border-radius: 8px; border: 1px solid var(--rule);
+  }
+  .modal__benchmark--exc { background: var(--olive-10); border-color: var(--kiwi-50); }
+  .modal__benchmark--good { background: var(--honey-10); border-color: var(--honey-40); }
+  .modal__benchmark--ok { background: var(--rule-soft); }
+  .modal__bench-value {
+    font-size: 18px; font-weight: 700; color: var(--ink);
+    margin-bottom: 4px; font-variant-numeric: tabular-nums;
+  }
+  .modal__bench-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted);
+  }
+  .modal__benchmark--exc .modal__bench-label { color: var(--spearmint-110); }
+  .modal__benchmark--good .modal__bench-label { color: var(--honey-80); }
+
+  /* ─── Friction signals ─── */
+  .friction__legend {
+    display: flex; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 16px;
+    font-size: 12px; color: var(--muted); font-weight: 500;
+  }
+  .friction__legend-item {
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer; padding: 6px 12px; border-radius: 999px;
+    transition: all 0.25s ease; user-select: none;
+    border: 1px solid var(--rule); background: var(--white);
+  }
+  .friction__legend-item:hover { background: var(--rule-soft); border-color: var(--muted-soft); }
+  .friction__legend-item.is-filtered { opacity: 0.35; }
+  .friction__legend-item.is-active {
+    background: var(--blueberry-110); color: var(--white);
+    border-color: var(--blueberry-110);
+  }
+  .friction__legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
+  .friction__hint-text { font-size: 12px; color: var(--muted); margin-bottom: 20px; font-style: italic; }
+  .friction__hint-text strong { color: var(--super-blue); font-style: normal; font-weight: 600; }
+
+  .friction { display: flex; flex-direction: column; gap: 6px; }
+  .friction__row {
+    display: grid; grid-template-columns: 280px 50px 1fr 130px;
+    gap: 16px; align-items: center;
+    padding: 12px 12px; border-radius: 6px;
+    cursor: pointer; transition: background 0.25s ease, border-color 0.25s ease;
+    border: 1px solid transparent;
+  }
+  .friction__row:hover {
+    background: var(--white); border-color: var(--rule);
+  }
+  .friction__row.is-active {
+    background: var(--white); border-color: var(--super-blue);
+  }
+  .friction__row.is-dimmed { opacity: 0.2; }
+  .friction__label { font-size: 13.5px; font-weight: 600; color: var(--ink); transition: color 0.2s ease; }
+  .friction__row:hover .friction__label { color: var(--super-blue); }
+  .friction__count {
+    font-size: 20px; font-weight: 700; color: var(--super-blue);
+    text-align: right; font-variant-numeric: tabular-nums;
+    transition: transform 0.3s ease;
+  }
+  .friction__row:hover .friction__count { transform: scale(1.15); }
+  .friction__bar-wrap {
+    height: 24px; background: var(--rule-soft);
+    border-radius: 4px; overflow: hidden; position: relative;
+  }
+  .friction__bar {
+    height: 100%; border-radius: 4px; width: 0%;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+    position: relative; overflow: hidden;
+  }
+  .friction__bar::after {
+    content: ''; position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s ease;
+  }
+  .friction__row:hover .friction__bar::after { left: 100%; }
+  .friction__row:hover .friction__bar { filter: brightness(1.15) saturate(1.1); }
+  .friction__category {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted); text-align: right;
+  }
+  .friction__hint {
+    grid-column: 1 / -1; font-size: 12.5px; color: var(--muted); line-height: 1.5;
+    max-height: 0; opacity: 0; overflow: hidden;
+    transition: all 0.4s ease;
+  }
+  .friction__row.is-active .friction__hint {
+    max-height: 100px; opacity: 1;
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--rule);
+  }
+
+  /* ─── Themes ─── */
+  .themes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .themes__col {
+    background: var(--white); padding: 28px; border-radius: 8px;
+    border: 1px solid var(--rule); transition: border-color 0.25s ease;
+  }
+  .themes__col:hover { border-color: var(--super-blue); }
+  .themes__col-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--super-blue);
+    margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--rule);
+  }
+  .themes__item {
+    display: flex; gap: 16px;
+    padding: 14px 0; border-bottom: 1px solid var(--rule-soft);
+  }
+  .themes__item:last-child { border-bottom: none; }
+  .themes__rank {
+    font-size: 32px; font-weight: 400;
+    color: var(--super-blue);
+    line-height: 1; width: 32px; flex-shrink: 0; opacity: 0.5;
+    font-variant-numeric: tabular-nums;
+  }
+  .themes__text { font-size: 14px; color: var(--ink); line-height: 1.5; padding-top: 6px; }
+
+  /* ─── How to read ─── */
+  .howto { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+  .howto__card {
+    background: var(--white); border: 1px solid var(--rule);
+    border-radius: 8px; padding: 24px;
+    border-top: 3px solid var(--super-blue);
+    cursor: pointer; transition: border-color 0.25s ease;
+    position: relative; overflow: hidden;
+  }
+  .howto__card:hover {
+    border-color: var(--super-blue);
+  }
+  .howto__card.is-expanded {
+    background: var(--wintermint);
+  }
+  .howto__head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .howto__num {
+    font-size: 42px; font-weight: 400;
+    color: var(--super-blue);
+    line-height: 1; opacity: 0.5;
+    font-variant-numeric: tabular-nums;
+  }
+  .howto__toggle {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--rule-soft); color: var(--super-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 400; transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+  .howto__card:hover .howto__toggle {
+    background: var(--super-blue); color: var(--white); transform: rotate(90deg);
+  }
+  .howto__card.is-expanded .howto__toggle {
+    background: var(--super-blue); color: var(--white); transform: rotate(45deg);
+  }
+  .howto__term { font-size: 16px; font-weight: 700; color: var(--super-blue); margin-bottom: 8px; letter-spacing: -0.005em; }
+  .howto__def { font-size: 13px; color: var(--ink); line-height: 1.55; }
+  .howto__def strong { color: var(--super-blue); font-weight: 700; }
+  .howto__extra {
+    max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.3s ease;
+  }
+  .howto__card.is-expanded .howto__extra {
+    max-height: 800px; opacity: 1;
+    margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--rule);
+  }
+  .howto__extra-title {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--super-blue); margin-bottom: 10px;
+  }
+  .howto__formula {
+    font-family: var(--font-mono); font-size: 12px;
+    background: linear-gradient(135deg, var(--blueberry-110) 0%, var(--super-blue-d) 100%);
+    color: var(--agave-20); padding: 12px 14px; border-radius: 6px;
+    margin-bottom: 12px; line-height: 1.6;
+  }
+  .howto__example { font-size: 12.5px; color: var(--muted); line-height: 1.55; font-style: italic; }
+  .howto__example strong { color: var(--ink); font-style: normal; }
+
+  /* ─── Exec summary ─── */
+  .summary { display: flex; flex-direction: column; gap: 14px; }
+  .summary__card {
+    display: grid; grid-template-columns: 220px 1fr;
+    gap: 28px; padding: 24px 28px; border-radius: 8px;
+    border-left: 4px solid;
+  }
+  .summary__card--win    { background: var(--olive-10); border-left-color: var(--spearmint-110); }
+  .summary__card--sent   { background: var(--olive-10); border-left-color: var(--spearmint-110); }
+  .summary__card--warn   { background: var(--honey-10); border-left-color: var(--honey-80); }
+  .summary__card--rec    {
+    background: var(--agave-20);
+    border-left-color: var(--super-blue);
+  }
+  .summary__label { font-size: 18px; font-weight: 700; letter-spacing: -0.005em; line-height: 1.2; }
+  .summary__card--win .summary__label,
+  .summary__card--sent .summary__label { color: var(--spearmint-110); }
+  .summary__card--warn .summary__label { color: var(--honey-80); }
+  .summary__card--rec  .summary__label { color: var(--super-blue); }
+  .summary__text { font-size: 13.5px; color: var(--ink); line-height: 1.6; }
+  .summary__text ol { margin-left: 20px; }
+  .summary__text li { margin-bottom: 6px; }
+
+  /* ─── FUNNEL (Hub Tab) ─── */
+  .funnel { display: flex; flex-direction: column; gap: 16px; }
+  .funnel__step { display: flex; flex-direction: column; gap: 6px; }
+  .funnel__label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 13px;
+  }
+  .funnel__name { font-weight: 600; color: var(--ink); }
+  .funnel__detail { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .funnel__bar-wrap {
+    height: 36px; background: var(--rule-soft);
+    border-radius: 6px; overflow: hidden; position: relative;
+  }
+  .funnel__bar {
+    height: 100%; border-radius: 6px;
+    display: flex; align-items: center; padding-left: 16px;
+    font-weight: 700; color: var(--white); font-size: 14px;
+    width: 0%;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ─── Skill list (Hub) ─── */
+  .skill-list { display: flex; flex-direction: column; gap: 12px; }
+  .skill-row { padding: 12px; border-radius: 8px; transition: all 0.25s ease; }
+  .skill-row:hover { background: var(--wintermint); }
+  .skill-row__head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .skill-row__name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .skill-row__count { font-size: 14px; font-weight: 700; color: var(--super-blue); font-variant-numeric: tabular-nums; }
+  .skill-row__bar-wrap { height: 8px; background: var(--rule-soft); border-radius: 4px; overflow: hidden; }
+
+  /* Larger variant — Top Skills section per leadership feedback */
+  .skill-list--large .skill-list { gap: 16px; }
+  .skill-list--large .skill-row { padding: 16px; }
+  .skill-list--large .skill-row__name { font-size: 16px; font-weight: 600; }
+  .skill-list--large .skill-row__count { font-size: 22px; font-weight: 700; }
+  .skill-list--large .skill-row__bar-wrap { height: 12px; }
+  .skill-list--large .skill-row__head { margin-bottom: 10px; }
+  .skill-row__bar {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--super-blue), var(--super-blue-l));
+    width: 0%; transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* Standout #1 skill row */
+  .skill-row--top .skill-row__bar {
+    background: linear-gradient(90deg, var(--honey-40), var(--honey-10));
+  }
+  .skill-row--top .skill-row__count {
+    color: var(--honey-80);
+  }
+  .skill-row--top .skill-row__name::before {
+    content: '★ '; color: var(--honey-40);
+  }
+
+  /* ─── Daily traffic chart (Hub) ─── */
+  .traffic-chart {
+    display: grid;
+    grid-template-columns: 32px repeat(13, 1fr);
+    gap: 4px;
+    height: 220px;
+    align-items: end;
+    padding: 16px 0 0;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .traffic-chart__yaxis {
+    position: absolute; left: -8px; top: 0; bottom: 24px;
+    display: flex; flex-direction: column-reverse; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 9px; color: var(--muted-soft);
+    text-align: right; width: 24px;
+  }
+  .traffic-chart__bar-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    height: 100%; position: relative;
+    grid-column: span 1;
+  }
+  .traffic-chart__bar {
+    width: 100%; max-width: 32px;
+    background: var(--super-blue-l);
+    border-radius: 3px 3px 0 0;
+    align-self: flex-end;
+    transition: height 1.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease;
+    position: relative;
+    height: 0;
+    cursor: pointer;
+  }
+  .traffic-chart__bar:hover { background: var(--super-blue); }
+  .traffic-chart__bar--spike { background: var(--honey-40); }
+  .traffic-chart__bar--spike:hover { background: var(--honey-80); }
+  .traffic-chart__bar-value {
+    position: absolute; top: -18px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+    color: var(--ink); white-space: nowrap;
+    opacity: 0; transition: opacity 0.2s ease;
+  }
+  .traffic-chart__bar:hover .traffic-chart__bar-value { opacity: 1; }
+  .traffic-chart__bar--spike .traffic-chart__bar-value {
+    opacity: 1; color: var(--honey-80);
+  }
+  .traffic-chart__label {
+    font-family: var(--font-mono); font-size: 9px;
+    color: var(--muted); padding-top: 4px; white-space: nowrap;
+  }
+  .traffic-callouts {
+    display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;
+    font-size: 13px; color: var(--ink); line-height: 1.5;
+  }
+  .traffic-callout {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 8px 0;
+  }
+  .traffic-callout__marker {
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 3px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+  }
+  .traffic-callout--spike .traffic-callout__marker {
+    background: var(--honey-10); color: var(--honey-80);
+  }
+  .traffic-callout--steady .traffic-callout__marker {
+    background: var(--agave-20); color: var(--super-blue);
+  }
+  .traffic-callout strong { color: var(--super-blue); font-weight: 700; }
+
+  /* ─── Discipline section layout (Hub) ─── */
+  .discipline-layout {
+    display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .discipline-layout { grid-template-columns: 1fr; }
+  }
+  /* Donut: pure CSS conic-gradient */
+  .donut-wrap {
+    display: flex; align-items: center; gap: 24px;
+    padding: 24px;
+    background: var(--white); border: 1px solid var(--rule); border-radius: 8px;
+  }
+  .donut {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    /* 64% General Marketing, 15% Lifecycle, 11% Product, 9% Creative Ops, 1% other = 100 */
+    background: conic-gradient(
+      var(--super-blue) 0% 64%,
+      var(--kiwi-50) 64% 79%,
+      var(--honey-40) 79% 90%,
+      var(--tomato) 90% 99%,
+      var(--muted-soft) 99% 100%
+    );
+    position: relative;
+    flex-shrink: 0;
+  }
+  .donut::after {
+    content: ''; position: absolute;
+    inset: 28px; border-radius: 50%;
+    background: var(--white);
+  }
+  .donut-legend { display: flex; flex-direction: column; gap: 10px; }
+  .donut-legend__item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 12px; color: var(--ink); font-weight: 500;
+  }
+  .donut-legend__swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .donut-legend__count {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--muted); margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+  /* Discipline cards override — 2x2 grid */
+  .discipline-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .discipline--gm .discipline__downloads { color: var(--super-blue); }
+  .discipline--life .discipline__downloads { color: var(--spearmint-110); }
+  .discipline--prod .discipline__downloads { color: var(--honey-80); }
+  .discipline--ops .discipline__downloads { color: var(--tomato); }
+  .discipline__tab-warn { color: var(--honey-80); margin-left: 6px; font-weight: 700; }
+
+  /* ─── Discipline cards (Hub) ─── */
+  .disciplines { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .discipline {
+    background: var(--white); border: 1px solid var(--rule);
+    border-radius: 8px; padding: 18px; transition: border-color 0.25s ease;
+  }
+  .discipline:hover { border-color: var(--super-blue); }
+  .discipline__name {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  .discipline__downloads {
+    font-size: 36px; font-weight: 400; line-height: 1;
+    color: var(--super-blue);
+    margin-bottom: 4px; font-variant-numeric: tabular-nums;
+  }
+  .discipline__sub { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .discipline__tabs {
+    margin-top: 8px; font-size: 11px; color: var(--muted);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .discipline__tab-badge {
+    background: var(--agave-20); color: var(--super-blue);
+    font-weight: 700; padding: 2px 8px;
+    border-radius: 10px; font-size: 10px;
+  }
+
+  /* ─── Repeat insight callout (Hub) ─── */
+  .repeat-callout {
+    background: var(--honey-10);
+    border: 1px solid var(--honey-40);
+    border-radius: 8px; padding: 24px;
+    display: grid; grid-template-columns: 160px 1fr; gap: 24px;
+    align-items: center;
+  }
+  .repeat-callout__big {
+    text-align: center;
+  }
+  .repeat-callout__val {
+    font-size: 64px; font-weight: 400; line-height: 1;
+    color: var(--honey-80); font-variant-numeric: tabular-nums;
+  }
+  .repeat-callout__lbl {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--honey-80); margin-top: 6px;
+  }
+  .repeat-callout__detail { font-size: 13.5px; color: var(--ink); line-height: 1.6; }
+  .repeat-callout__detail strong { color: var(--honey-80); font-weight: 700; }
+
+  /* ─── Returner list (Hub) ─── */
+  .returner-list { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; }
+  .returner-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--white); border: 1px solid var(--rule);
+    border-radius: 8px; padding: 10px 14px; font-size: 13px;
+    transition: all 0.2s ease;
+  }
+  .returner-row:hover { border-color: var(--super-blue); background: var(--wintermint); }
+  .returner-row__days {
+    background: var(--honey-10); color: var(--honey-80);
+    font-weight: 700; padding: 3px 10px;
+    border-radius: 999px; font-size: 11px;
+    white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+  .returner-row__email { color: var(--ink); flex: 1; font-weight: 500; }
+
+  /* ─── No action grid (Hub) ─── */
+  .no-action-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  }
+  .no-action-item {
+    background: var(--white); border: 1px solid var(--rule);
+    border-left: 3px solid var(--tomato);
+    border-radius: 8px; padding: 10px 12px;
+    font-size: 12px; color: var(--muted);
+    transition: all 0.2s ease;
+  }
+  .no-action-item:hover { transform: translateX(2px); background: var(--wintermint); }
+  .no-action-item.repeat {
+    border-left-color: var(--honey-40); color: var(--ink);
+  }
+  .no-action-item__tag {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--honey-80); display: block; margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+
+  /* ─── Card wrapper (used in Hub) ─── */
+  .card-frame {
+    background: var(--white); border: 1px solid var(--rule);
+    border-radius: 8px; padding: 28px;
+  }
+  .card-frame--accent {
+    background: var(--white);
+    border-color: var(--rule);
+  }
+
+  /* ─── Footer ─── */
+  .footer {
+    margin-top: 72px; padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 11px; color: var(--muted); font-weight: 500;
+    display: flex; justify-content: space-between; flex-wrap: wrap;
+    gap: 12px; align-items: center;
+  }
+  .footer__lockup { display: flex; flex-direction: column; line-height: 1.2; }
+  .footer__lockup-top {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    color: var(--super-blue); text-transform: uppercase;
+  }
+  .footer__lockup-bottom { font-size: 12px; font-weight: 400; color: var(--super-blue); }
+
+  /* ═══════════════════════════════════════════════════════════
+     RESPONSIVE — TABLET ≤ 880px
+     ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 880px) {
+    .shell { padding: 32px 24px 60px; }
+    .brandbar { padding: 14px 24px; gap: 16px; flex-wrap: wrap; }
+    .live-pulse { margin-left: 0; }
+    .masthead__title { font-size: 38px; }
+    .headline { padding: 28px 28px; }
+    .headline__text { font-size: 22px; }
+    .reach { grid-template-columns: 1fr 1fr; }
+    .reach__cell--hero { grid-column: 1 / -1; }
+    .reach__num { font-size: 72px; }
+    .reach__cell:not(.reach__cell--hero) .reach__num { font-size: 48px; }
+    .compare__row {
+      grid-template-columns: 1.2fr 1fr 1fr 0.7fr 0.8fr 1.4fr;
+    }
+    .compare__cell { padding: 12px 14px; font-size: 12px; }
+    .compare__cell--metric { font-size: 24px; }
+    .friction__row { grid-template-columns: 200px 40px 1fr 100px; gap: 12px; }
+    .friction__label { font-size: 12.5px; }
+    .howto { grid-template-columns: 1fr 1fr; }
+    .summary__card { grid-template-columns: 160px 1fr; gap: 20px; padding: 20px 24px; }
+    .section__title { font-size: 22px; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     RESPONSIVE — PHONE ≤ 560px (iPhone + Android)
+     ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 560px) {
+    body { font-size: 14px; }
+    .shell { padding: 20px 16px 48px; }
+
+    /* Brand bar — stack vertically */
+    .brandbar {
+      padding: 12px 16px; gap: 10px;
+      flex-direction: column; align-items: stretch;
+    }
+    .lockup { align-items: flex-start; }
+    .live-pulse { align-self: flex-start; margin-left: 0; }
+    .brandbar__tabs { margin-left: 0; justify-content: stretch; gap: 6px; }
+    .tab-btn { flex: 1; padding: 10px 12px; font-size: 12.5px; text-align: center; }
+
+    /* Masthead */
+    .masthead { padding-top: 20px; margin-bottom: 28px; }
+    .masthead__kicker { font-size: 10px; margin-bottom: 12px; }
+    .masthead__kicker::after { max-width: 80px; }
+    .masthead__title { font-size: 28px; margin-bottom: 14px; }
+    .masthead__byline {
+      flex-direction: column; gap: 4px; font-size: 12px;
+    }
+    .masthead__byline span:not(:last-child)::after { display: none; }
+
+    /* Headline pull-quote */
+    .headline { padding: 22px 20px; margin-bottom: 36px; border-radius: 8px; }
+    .headline__kicker { font-size: 10px; margin-bottom: 8px; }
+    .headline__text { font-size: 17px; line-height: 1.35; }
+
+    /* Section headers */
+    .section { margin-bottom: 40px; }
+    .section__header {
+      flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 20px;
+    }
+    .section__num { font-size: 10px; }
+    .section__title { font-size: 22px; }
+    .section__lede {
+      margin-left: 0; text-align: left; max-width: 100%; font-size: 13px;
+    }
+
+    /* Total reach — stack all three cards */
+    .reach { grid-template-columns: 1fr; gap: 12px; }
+    .reach__cell, .reach__cell--hero { grid-column: 1; padding: 24px 20px; }
+    .reach__cell--hero::before { left: 20px; top: 20px; }
+    .reach__num { font-size: 64px; }
+    .reach__cell:not(.reach__cell--hero) .reach__num { font-size: 48px; }
+    .reach__sub { font-size: 12px; }
+
+    /* Venn diagram — scale down */
+    .venn__svg { max-width: 200px; }
+    .venn__legend { font-size: 11.5px; }
+
+    /* Comparison table — convert to stacked cards */
+    .compare { border-radius: 8px; }
+    .compare__row--head { display: none; }
+    .compare__row {
+      grid-template-columns: 1fr; gap: 0;
+      padding: 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .compare__row:last-child:not(.compare__methodology) { border-bottom: none; }
+    .compare__cell {
+      padding: 8px 0; border-right: none; border-bottom: 1px solid var(--rule-soft);
+      flex-direction: row; justify-content: space-between; align-items: center;
+    }
+    .compare__cell:last-child { border-bottom: none; }
+    .compare__cell--label {
+      background: transparent; padding-bottom: 12px;
+      flex-direction: column; align-items: flex-start; gap: 6px;
+    }
+    .compare__cell--label .label-main { font-size: 15px; }
+    .compare__cell::before {
+      content: attr(data-label);
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted);
+    }
+    .compare__cell--label::before { display: none; }
+    .compare__cell--metric {
+      font-size: 24px; justify-content: space-between;
+      padding: 10px 0; cursor: pointer;
+    }
+    .compare__cell--metric .metric-value { font-size: 24px; }
+    .compare__cell--metric .nps-arc { width: 70px; }
+    .compare__cell--delta, .compare__cell--avg {
+      background: transparent; font-size: 14px; justify-content: space-between;
+      padding: 8px 0;
+    }
+    .compare__cell--insight { font-size: 12px; padding-top: 8px; }
+    .compare__methodology { font-size: 11px; padding: 12px 16px; }
+
+    /* Friction signals — stack within rows */
+    .friction__legend { gap: 6px 8px; }
+    .friction__legend-item { padding: 5px 10px; font-size: 11px; }
+    .friction__hint-text { font-size: 11.5px; margin-bottom: 14px; }
+    .friction__row {
+      grid-template-columns: 1fr auto;
+      gap: 8px 12px;
+      padding: 12px;
+    }
+    .friction__row:hover { padding-left: 12px; }
+    .friction__label { font-size: 13px; grid-column: 1; }
+    .friction__count {
+      font-size: 18px; text-align: right; grid-column: 2; grid-row: 1;
+    }
+    .friction__bar-wrap {
+      grid-column: 1 / -1; height: 18px; margin-top: 2px;
+    }
+    .friction__category {
+      grid-column: 1 / -1; text-align: left; font-size: 9.5px;
+    }
+
+    /* Themes — stack columns */
+    .themes { grid-template-columns: 1fr; gap: 12px; }
+    .themes__col { padding: 20px; }
+    .themes__rank { font-size: 26px; width: 26px; }
+    .themes__text { font-size: 13px; }
+
+    /* How to read cards — stack */
+    .howto { grid-template-columns: 1fr; gap: 12px; }
+    .howto__card { padding: 20px; }
+    .howto__num { font-size: 36px; }
+
+    /* Executive summary — stack label above text */
+    .summary__card {
+      grid-template-columns: 1fr; gap: 8px; padding: 20px 22px;
+    }
+    .summary__label { font-size: 15px; }
+    .summary__text { font-size: 13px; }
+    .summary__text ol { margin-left: 18px; }
+
+    /* Funnel — Hub tab */
+    .card-frame { padding: 18px; border-radius: 8px; }
+    .funnel { gap: 12px; }
+    .funnel__label { font-size: 12px; }
+    .funnel__detail { font-size: 11px; }
+    .funnel__bar-wrap { height: 30px; }
+    .funnel__bar { font-size: 12px; padding-left: 12px; }
+
+    /* Repeat callout */
+    .repeat-callout {
+      grid-template-columns: 1fr; gap: 16px; padding: 20px;
+    }
+    .repeat-callout__val { font-size: 48px; }
+    .repeat-callout__detail { font-size: 13px; }
+
+    /* Daily traffic chart — compact mobile layout */
+    .traffic-chart {
+      grid-template-columns: 20px repeat(13, 1fr);
+      gap: 2px; height: 160px;
+      padding: 12px 0 0;
+    }
+    .traffic-chart__yaxis { font-size: 7.5px; width: 18px; left: -2px; }
+    .traffic-chart__bar-wrap { gap: 2px; }
+    .traffic-chart__bar { max-width: 14px; }
+    .traffic-chart__label {
+      font-size: 7px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      white-space: nowrap;
+      padding-top: 2px;
+      align-self: center;
+    }
+    .traffic-chart__bar-value { font-size: 7.5px; top: -10px; }
+    .traffic-callouts { font-size: 12px; margin-bottom: 12px; }
+    .traffic-callout__marker { font-size: 9px; padding: 2px 6px; }
+    .traffic-callout { padding: 6px 0; gap: 8px; }
+
+    /* Top skills — keep larger fonts but compact */
+    .skill-list--large .skill-row { padding: 12px; }
+    .skill-list--large .skill-row__name { font-size: 14px; }
+    .skill-list--large .skill-row__count { font-size: 18px; }
+    .skill-list--large .skill-row__bar-wrap { height: 10px; }
+
+    /* Discipline layout — stack */
+    .discipline-layout { grid-template-columns: 1fr; gap: 16px; }
+    .donut-wrap {
+      flex-direction: column; gap: 16px; padding: 20px;
+    }
+    .donut { width: 140px; height: 140px; }
+    .donut::after { inset: 24px; }
+    .donut-legend { width: 100%; }
+    .discipline-grid { grid-template-columns: 1fr; gap: 10px; }
+    .discipline { padding: 16px; }
+    .discipline__downloads { font-size: 30px; }
+
+    /* Modal */
+    .modal { border-radius: 10px; max-height: 88vh; }
+    .modal__head { padding: 22px 22px 12px; gap: 12px; }
+    .modal__title { font-size: 22px; }
+    .modal__body { padding: 6px 22px 24px; }
+    .modal__definition { font-size: 13.5px; }
+    .modal__formula { font-size: 11.5px; padding: 14px 16px; }
+    .modal__benchmarks { grid-template-columns: 1fr; gap: 8px; }
+
+    /* Footer */
+    .footer {
+      flex-direction: column; align-items: flex-start; gap: 8px;
+      margin-top: 48px; font-size: 10.5px;
+    }
+  }
+
+  /* Extra-small phones (iPhone SE, narrow Android) ≤ 380px */
+  @media (max-width: 380px) {
+    .masthead__title { font-size: 24px; }
+    .headline__text { font-size: 15px; }
+    .section__title { font-size: 20px; }
+    .reach__num { font-size: 56px; }
+    .traffic-chart { height: 150px; }
+    .traffic-chart__label { font-size: 7px; }
+  }
+
+  /* ─── Print ─── */
+  @media print {
+    .brandbar, .modal-overlay { display: none; }
+    .tab-panel { display: block !important; page-break-after: always; }
+    body { background: white; }
+    body::before { display: none; }
+    .shell { padding: 24px; max-width: none; }
+    .reveal { opacity: 1; transform: none; }
+    .friction__bar, .funnel__bar, .skill-row__bar {
+      print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    }
+    .howto__toggle { display: none !important; }
+    .howto__card.is-expanded .howto__extra { max-height: none; opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="brandbar">
+  <div class="lockup">
+    <span class="lockup__top">Marketing</span>
+    <span class="lockup__bottom">Craft Development &amp; Capabilities</span>
+  </div>
+  <div class="live-pulse">
+    <span class="live-pulse__dot"></span>
+    Live · Master Tracker
+  </div>
+  <div class="brandbar__tabs">
+    <button class="tab-btn is-active" data-tab="workshops">Workshop Series</button>
+    <button class="tab-btn" data-tab="hub">Skills Hub</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TAB 1 — WORKSHOP SERIES
+     ═══════════════════════════════════════════════════════════ -->
+<div class="tab-panel is-active" id="tab-workshops">
+<div class="shell">
+
+  <header class="masthead reveal">
+    <div class="masthead__copy">
+      <div class="masthead__kicker">AI Transformation · Workshop Series Report</div>
+      <h1 class="masthead__title"><strong>Claude for Marketers</strong> — Leadership Dashboard</h1>
+      <div class="masthead__byline">
+        <span>Sessions 1 &amp; 2</span>
+        <span>Apr 22 + May 6, 2026</span>
+        <span>Owners: Maria Boukhval &amp; Sylvia Luong</span>
+        <span>Source: Master Tracker</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="headline reveal">
+    <div class="headline__kicker">The 1-minute read</div>
+    <p class="headline__text">
+      <strong>578 unique marketers</strong> attended across two sessions — <strong>72% of the 801-person TAM</strong>. <strong>173 came to both</strong> (a 38% return rate). Both sessions land strongly positive — <strong>NPS +67</strong> and <strong>+47</strong>, with <strong>T2B 93% → 65%</strong>. Real demand, fixable friction.
+    </p>
+  </div>
+
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 01</div>
+      <h2 class="section__title">Total reach</h2>
+      <p class="section__lede">Unique participants across both sessions · TAM = 801.</p>
+    </div>
+    <div class="reach">
+      <div class="reach__cell reach__cell--hero">
+        <div class="reach__label">Total unique participants</div>
+        <div class="reach__num" data-count="578">0</div>
+        <p class="reach__sub">578 unique people attended at least one session across Apr 22 and May 6 — deduplicated across both events. <strong>173 attended both sessions</strong> (38% return rate). Roster cleaned: facilitator removed, Sylvia &amp; Maria excluded.</p>
+        <span class="reach__def-chip metric-def-chip--pulse">450 + 301 − 173 overlap = 578</span>
+      </div>
+      <div class="reach__cell">
+        <div class="reach__label">% of TAM reached</div>
+        <div class="reach__num" data-count="72" data-suffix="%">0</div>
+        <p class="reach__sub">578 of 801 total addressable marketers. 543 attendees matched to the TAM list directly.</p>
+      </div>
+      <div class="reach__cell">
+        <div class="reach__label">Unique per session · overlap shown</div>
+        <div class="venn">
+          <svg class="venn__svg" viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" aria-label="Venn diagram showing Session 1 and Session 2 attendee overlap">
+            <!-- Session labels above circles -->
+            <text class="venn__label" x="62" y="14">Session 1 · 450</text>
+            <text class="venn__label" x="178" y="14">Session 2 · 301</text>
+            <!-- Two circles, intersecting -->
+            <circle class="venn__circle-s1" cx="82" cy="76" r="56"/>
+            <circle class="venn__circle-s2" cx="158" cy="76" r="56"/>
+            <!-- Numbers in non-overlap regions -->
+            <text class="venn__num venn__num--main venn__num--s1" x="52" y="78">277</text>
+            <text class="venn__num venn__num--main venn__num--s2" x="188" y="78">128</text>
+            <!-- Overlap number in the center lens -->
+            <text class="venn__num venn__num--overlap" x="120" y="72">173</text>
+            <text class="venn__label" x="120" y="90" style="fill:var(--muted-soft);font-size:8px;">both</text>
+          </svg>
+          <div class="venn__legend">
+            <div class="venn__legend-row">
+              <span class="venn__legend-swatch" style="background:var(--super-blue); opacity:0.55;"></span>
+              <span class="venn__legend-text">Session 1 total · Apr 22</span>
+              <span class="venn__legend-count">450</span>
+            </div>
+            <div class="venn__legend-row">
+              <span class="venn__legend-swatch" style="background:var(--kiwi-50); opacity:0.55;"></span>
+              <span class="venn__legend-text">Session 2 total · May 6</span>
+              <span class="venn__legend-count">301</span>
+            </div>
+            <div class="venn__legend-row" style="border-top:1px dashed var(--rule);padding-top:6px;margin-top:2px;">
+              <span class="venn__legend-swatch" style="background:var(--muted-soft);"></span>
+              <span class="venn__legend-text">Attended <strong style="color:var(--super-blue)">both</strong> sessions</span>
+              <span class="venn__legend-count">173</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §02 Key insights & next steps (moved up per leadership feedback) -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 02</div>
+      <h2 class="section__title">Key insights &amp; next steps</h2>
+      <p class="section__lede">What leadership needs to know in 1 minute.</p>
+    </div>
+    <div class="summary">
+      <div class="summary__card summary__card--win">
+        <div class="summary__label">Reach</div>
+        <p class="summary__text">578 unique marketers attended — <strong>72% of the 801-person TAM</strong>. <strong>173 came to both sessions</strong> (a 38% return rate), the clearest signal that the series creates pull, not just attendance.</p>
+      </div>
+      <div class="summary__card summary__card--sent">
+        <div class="summary__label">Sentiment</div>
+        <p class="summary__text">Both sessions land strongly positive. Session 1 (lecture) NPS <strong>+67</strong> / T2B <strong>93%</strong> — exceptional. Session 2 (hands-on) NPS <strong>+47</strong> / T2B <strong>65%</strong> — still strong. The drop is real but explainable: hands-on confidence is harder to self-report in the moment, and tech friction hurt the experience.</p>
+      </div>
+      <div class="summary__card summary__card--warn">
+        <div class="summary__label">Friction to address</div>
+        <p class="summary__text">Three signals dominate the chat: connector / file-access friction (12 mentions), pace and cognitive load (9), and unclear skill creation/sharing mechanics (7). These are fixable with format and tooling changes, not content quality issues.</p>
+      </div>
+      <div class="summary__card summary__card--rec">
+        <div class="summary__label">Recommended next moves</div>
+        <div class="summary__text">
+          <ol>
+            <li>Slow Session 3 pace and add facilitator-assisted breakouts.</li>
+            <li>Pre-validate connector setup before participants arrive.</li>
+            <li>Publish a "first skill in 15 minutes" quick-start to bridge download → first use.</li>
+            <li>Add BU-specific follow-ups (CG, Comms, Credit Karma) — strong audience signal.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 03</div>
+      <h2 class="section__title">NPS &amp; T2B comparison</h2>
+      <p class="section__lede"><strong style="color:var(--super-blue)">Click any metric number</strong> to open the deep-dive.</p>
+    </div>
+    <div class="compare">
+      <div class="compare__row compare__row--head">
+        <div class="compare__cell">Metric</div>
+        <div class="compare__cell">Session 1 · Lecture</div>
+        <div class="compare__cell">Session 2 · Hands-on</div>
+        <div class="compare__cell">Δ S2 vs S1</div>
+        <div class="compare__cell">Series avg</div>
+        <div class="compare__cell">What it tells us</div>
+      </div>
+      <div class="compare__row">
+        <div class="compare__cell compare__cell--label">
+          <span class="label-main">NPS (combined)</span>
+          <span class="metric-def-chip metric-def-chip--pulse">%Promoters (9–10) − %Detractors (0–6)</span>
+        </div>
+        <div class="compare__cell compare__cell--metric" data-modal="nps-s1" data-label="Session 1 · Lecture">
+          <span class="metric-value">+67</span>
+          <div class="nps-arc"><div class="nps-arc__indicator" data-pos="83.5"></div></div>
+        </div>
+        <div class="compare__cell compare__cell--metric" data-modal="nps-s2" data-label="Session 2 · Hands-on">
+          <span class="metric-value">+47</span>
+          <div class="nps-arc"><div class="nps-arc__indicator" data-pos="73.5"></div></div>
+        </div>
+        <div class="compare__cell compare__cell--delta" data-label="Δ S2 vs S1">−20</div>
+        <div class="compare__cell compare__cell--avg" data-label="Series avg">+57</div>
+        <div class="compare__cell compare__cell--insight" data-label="What it tells us">Strong on both. The drop reflects the harder hands-on format, not loss of value.</div>
+      </div>
+      <div class="compare__row">
+        <div class="compare__cell compare__cell--label">
+          <span class="label-main">T2B (combined)</span>
+          <span class="metric-def-chip metric-def-chip--pulse">Avg share rating 4 or 5 on 1–5</span>
+        </div>
+        <div class="compare__cell compare__cell--metric" data-modal="t2b-s1" data-label="Session 1 · Lecture"><span class="metric-value">93%</span></div>
+        <div class="compare__cell compare__cell--metric" data-modal="t2b-s2" data-label="Session 2 · Hands-on"><span class="metric-value">65%</span></div>
+        <div class="compare__cell compare__cell--delta" data-label="Δ S2 vs S1">−28pp</div>
+        <div class="compare__cell compare__cell--avg" data-label="Series avg">79%</div>
+        <div class="compare__cell compare__cell--insight" data-label="What it tells us">Same pattern. Hands-on confidence is harder to rate 4–5 in the moment.</div>
+      </div>
+      <div class="compare__row">
+        <div class="compare__cell compare__cell--label">
+          <span class="label-main">Total respondents (n)</span>
+          <span class="metric-def-chip">Live poll + post-survey</span>
+        </div>
+        <div class="compare__cell compare__cell--metric" data-modal="n-s1" data-label="Session 1 · Lecture"><span class="metric-value" style="font-size:24px;">67</span></div>
+        <div class="compare__cell compare__cell--metric" data-modal="n-s2" data-label="Session 2 · Hands-on"><span class="metric-value" style="font-size:24px;">83</span></div>
+        <div class="compare__cell compare__cell--delta" data-label="Δ S2 vs S1">+16</div>
+        <div class="compare__cell compare__cell--avg" data-label="Series avg">75</div>
+        <div class="compare__cell compare__cell--insight" data-label="What it tells us">Session 2 added 16 post-survey responses on top of 67 live-poll responses.</div>
+      </div>
+      <div class="compare__methodology">
+        <strong>Methodology</strong>
+        Session 2 aggregates the in-session live poll (n=67) and post-session survey (n=16) for a combined n=83. Session 1 reflects the live poll. NPS = % Promoters (9–10) minus % Detractors (0–6). T2B = average across 3 self-efficacy questions of (count of 4s + 5s) ÷ total responses.
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 04</div>
+      <h2 class="section__title">Chat sentiment &amp; friction signals</h2>
+      <p class="section__lede">56 themed mentions from both sessions' Zoom chat.</p>
+    </div>
+    <div class="friction__legend" id="legend">
+      <div class="friction__legend-item" data-cat="Friction"><span class="friction__legend-swatch" style="background:var(--bar-friction);"></span>Friction</div>
+      <div class="friction__legend-item" data-cat="Capability"><span class="friction__legend-swatch" style="background:var(--bar-capability);"></span>Capability question</div>
+      <div class="friction__legend-item" data-cat="Audience fit"><span class="friction__legend-swatch" style="background:var(--bar-audience);"></span>Audience fit</div>
+      <div class="friction__legend-item" data-cat="Positive"><span class="friction__legend-swatch" style="background:var(--bar-positive);"></span>Positive momentum</div>
+      <div class="friction__legend-item" data-cat="Process"><span class="friction__legend-swatch" style="background:var(--bar-process);"></span>Process</div>
+      <div class="friction__legend-item" data-cat="Blocker"><span class="friction__legend-swatch" style="background:var(--bar-blocker);"></span>Access blocker</div>
+    </div>
+    <p class="friction__hint-text"><strong>Tip:</strong> Click a legend pill to filter by category. Click any row to reveal context.</p>
+    <div class="friction">
+      <div class="friction__row" data-cat="Friction">
+        <div class="friction__label">Connector / file-access friction</div>
+        <div class="friction__count">12</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="100%" style="background:var(--bar-friction);"></div></div>
+        <div class="friction__category">Friction</div>
+        <div class="friction__hint">The biggest pain point. Google Sheets and Slides connectors aren't live yet, and many attendees can't access third-party tools they need.</div>
+      </div>
+      <div class="friction__row" data-cat="Friction">
+        <div class="friction__label">Pace, cognitive load, hands-on time</div>
+        <div class="friction__count">9</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="75%" style="background:var(--bar-friction);"></div></div>
+        <div class="friction__category">Friction</div>
+        <div class="friction__hint">Session 2 covered a lot quickly. Multiple requests for slower pace and longer hands-on time.</div>
+      </div>
+      <div class="friction__row" data-cat="Capability">
+        <div class="friction__label">Skill creation &amp; sharing mechanics</div>
+        <div class="friction__count">7</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="58.3%" style="background:var(--bar-capability);"></div></div>
+        <div class="friction__category">Capability</div>
+        <div class="friction__hint">Strong appetite to build skills, but the path from "I have an idea" to "I have a working skill" isn't clear.</div>
+      </div>
+      <div class="friction__row" data-cat="Audience fit">
+        <div class="friction__label">Audience-specific relevance</div>
+        <div class="friction__count">6</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="50%" style="background:var(--bar-audience);"></div></div>
+        <div class="friction__category">Audience fit</div>
+        <div class="friction__hint">Requests for BU-specific cuts: Credit Karma marketing, Comms team, CG marketing ops.</div>
+      </div>
+      <div class="friction__row" data-cat="Positive">
+        <div class="friction__label">Positive momentum / appetite for more</div>
+        <div class="friction__count">6</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="50%" style="background:var(--bar-positive);"></div></div>
+        <div class="friction__category">Positive</div>
+        <div class="friction__hint">"More of this please." Active recommendations to colleagues. Real demand signal.</div>
+      </div>
+      <div class="friction__row" data-cat="Capability">
+        <div class="friction__label">Cowork vs Code vs Chat decisions</div>
+        <div class="friction__count">4</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="33.3%" style="background:var(--bar-capability);"></div></div>
+        <div class="friction__category">Capability</div>
+        <div class="friction__hint">Which tool for which task? A decision framework would help.</div>
+      </div>
+      <div class="friction__row" data-cat="Capability">
+        <div class="friction__label">Project context, memory, cross-chat</div>
+        <div class="friction__count">4</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="33.3%" style="background:var(--bar-capability);"></div></div>
+        <div class="friction__category">Capability</div>
+        <div class="friction__hint">How memory and projects relate. Linking work across sessions.</div>
+      </div>
+      <div class="friction__row" data-cat="Friction">
+        <div class="friction__label">Approval / governance / brand</div>
+        <div class="friction__count">3</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="25%" style="background:var(--bar-friction);"></div></div>
+        <div class="friction__category">Friction</div>
+        <div class="friction__hint">Quality and brand-safety guardrails when AI output goes to external audiences.</div>
+      </div>
+      <div class="friction__row" data-cat="Process">
+        <div class="friction__label">Documentation &amp; reference materials</div>
+        <div class="friction__count">3</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="25%" style="background:var(--bar-process);"></div></div>
+        <div class="friction__category">Process</div>
+        <div class="friction__hint">Requests for searchable Q&amp;A, prompt library, post-session FAQ.</div>
+      </div>
+      <div class="friction__row" data-cat="Blocker">
+        <div class="friction__label">Contractor / Cowork access</div>
+        <div class="friction__count">2</div>
+        <div class="friction__bar-wrap"><div class="friction__bar" data-target="16.7%" style="background:var(--bar-blocker);"></div></div>
+        <div class="friction__category">Blocker</div>
+        <div class="friction__hint">Cowork is currently FTE-only. Contractors flagged this as a barrier to participation.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 05</div>
+      <h2 class="section__title">Top 3 feedback themes</h2>
+      <p class="section__lede">Areas of opportunity, surfaced from open-text feedback per session.</p>
+    </div>
+    <div class="themes">
+      <div class="themes__col">
+        <div class="themes__col-title">Session 1 · Apr 22</div>
+        <div class="themes__item"><div class="themes__rank">1</div><div class="themes__text">Connector / file-access friction</div></div>
+        <div class="themes__item"><div class="themes__rank">2</div><div class="themes__text">Pace and hands-on time</div></div>
+        <div class="themes__item"><div class="themes__rank">3</div><div class="themes__text">Skill creation &amp; sharing mechanics</div></div>
+      </div>
+      <div class="themes__col">
+        <div class="themes__col-title">Session 2 · May 6</div>
+        <div class="themes__item"><div class="themes__rank">1</div><div class="themes__text">Pace &amp; cognitive load — too fast, hard to keep up hands-on</div></div>
+        <div class="themes__item"><div class="themes__rank">2</div><div class="themes__text">Tech issues during hands-on (Claude stalling, file recognition)</div></div>
+        <div class="themes__item"><div class="themes__rank">3</div><div class="themes__text">Audience relevance — requests for BU-specific sessions (CG, Comms, CK)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 06</div>
+      <h2 class="section__title">How to read these numbers</h2>
+      <p class="section__lede">Click any card to see the formula and worked example.</p>
+    </div>
+    <div class="howto">
+      <div class="howto__card" data-card>
+        <div class="howto__head"><div class="howto__num">1</div><div class="howto__toggle">+</div></div>
+        <div class="howto__term">Unique Participants</div>
+        <p class="howto__def">Unique people who attended at least one session across Apr 22 and May 6, deduplicated across both events. Excludes facilitator, Sylvia &amp; Maria. <strong>578 = 450 (S1) + 301 (S2) − 173 attended both.</strong></p>
+        <div class="howto__extra">
+          <div class="howto__extra-title">Worked example</div>
+          <div class="howto__formula">Session 1 unique:   450<br>Session 2 unique:   301<br>Attended both:       173<br><br>Total unique = 450 + 301 − 173<br>             = <strong>578</strong><br><br>TAM reach = 578 / 801 = <strong>72.2%</strong></div>
+          <p class="howto__example">A conference room with 8 people joining as one connection counts as <strong>1 participant</strong>, not 8. Deduplication across sessions ensures we count each marketer once, even if they came to both.</p>
+        </div>
+      </div>
+      <div class="howto__card" data-card>
+        <div class="howto__head"><div class="howto__num">2</div><div class="howto__toggle">+</div></div>
+        <div class="howto__term">NPS — Net Promoter Score</div>
+        <p class="howto__def">Industry-standard sentiment metric. <strong>NPS = % Promoters (9–10) minus % Detractors (0–6)</strong> on a 0–10 "likelihood to recommend" question. Range: −100 to +100. Above +50 is excellent.</p>
+        <div class="howto__extra">
+          <div class="howto__extra-title">Formula &amp; example</div>
+          <div class="howto__formula">Session 2: 83 responses<br>52 Promoters (62.7%)<br>13 Detractors (15.7%)<br>NPS = 62.7% − 15.7% = +47</div>
+          <p class="howto__example">A score of <strong>+50</strong> is excellent. <strong>+70+</strong> is world-class. Our Session 1 NPS of <strong>+67</strong> places us close to world-class for an internal program.</p>
+        </div>
+      </div>
+      <div class="howto__card" data-card>
+        <div class="howto__head"><div class="howto__num">3</div><div class="howto__toggle">+</div></div>
+        <div class="howto__term">T2B — Top 2 Box</div>
+        <p class="howto__def">Companion confidence metric. <strong>For each 1–5 self-efficacy question, T2B = share of respondents giving 4 or 5</strong>. Session T2B = average across the 3 ranking questions.</p>
+        <div class="howto__extra">
+          <div class="howto__extra-title">Formula &amp; example</div>
+          <div class="howto__formula">Per Q: (count of 4s + 5s) ÷ n<br>S2 Q1: 53/83 = 63.9%<br>S2 Q2: 57/83 = 68.7%<br>S2 Q3: 52/83 = 62.7%<br>T2B = 65.1%</div>
+          <p class="howto__example">NPS asks willingness to recommend. <strong>T2B asks self-reported confidence.</strong> A drop in T2B usually means the content got harder, not worse.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__lockup">
+      <span class="footer__lockup-top">Marketing</span>
+      <span class="footer__lockup-bottom">Craft Development &amp; Capabilities</span>
+    </div>
+    <div>Intuit Confidential and Proprietary</div>
+    <div>Source: AI Transformation Master Tracker</div>
+  </footer>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TAB 2 — SKILLS HUB (Sylvia's content, MCD&C styling)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-hub">
+<div class="shell">
+
+  <header class="masthead reveal">
+    <div class="masthead__copy">
+      <div class="masthead__kicker">Claude 10 Skills Taskforce · Skills Hub Launch Report</div>
+      <h1 class="masthead__title"><strong>Skills Library</strong> — Launch Analytics</h1>
+      <div class="masthead__byline">
+        <span>Apr 29 – May 11, 2026</span>
+        <span>Owners: Maria Boukhval &amp; Sylvia Luong</span>
+        <span>growyourcraft.intuit.com/craft/gen-ai</span>
+        <span>Source: Hub Analytics</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="headline reveal">
+    <div class="headline__kicker">The 1-minute read</div>
+    <p class="headline__text">
+      The Hub reached <strong>234 unique visitors</strong> (29% of the 801-person audience), with a <strong>48.7% download conversion rate</strong>. <strong>66 visitors returned</strong> on multiple days, and 70% of those returners downloaded — strong early signal that the Hub is working.
+    </p>
+  </div>
+
+  <!-- §01 Reach -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 01</div>
+      <h2 class="section__title">Total reach</h2>
+      <p class="section__lede">Skills Hub launch engagement · Apr 29 – May 11 · TAM = 801.</p>
+    </div>
+    <div class="reach">
+      <div class="reach__cell reach__cell--hero">
+        <div class="reach__label">Total unique visitors</div>
+        <div class="reach__num" data-count="234">0</div>
+        <p class="reach__sub">234 distinct marketers visited the Skills Hub during the launch window. 427 total page visits indicate visitors are returning to browse — not just one-time clicks.</p>
+        <span class="reach__def-chip metric-def-chip--pulse">234 unique visitors · 427 total visits</span>
+      </div>
+      <div class="reach__cell">
+        <div class="reach__label">% of TAM reached</div>
+        <div class="reach__num" data-count="29" data-suffix="%">0</div>
+        <p class="reach__sub">234 of 801 total addressable marketers reached the Hub in the launch window.</p>
+        <p class="reach__note"><strong>Note:</strong> This metric is underrepresented due to the fact that it does not include data on unique marketers who visited the Skills Hub between 4/21 launch – 4/28, due to tracking analytics not yet being available at the time.</p>
+      </div>
+      <div class="reach__cell">
+        <div class="reach__label">Repeat visitors</div>
+        <div class="reach__num" data-count="66">0</div>
+        <p class="reach__sub">Returned on multiple days · 28% of all visitors · 70% of these downloaded.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- §02 Key insights & next steps (moved up per leadership feedback) -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 02</div>
+      <h2 class="section__title">Key insights &amp; next steps</h2>
+      <p class="section__lede">Hub launch — what leadership needs to know.</p>
+    </div>
+    <div class="summary">
+      <div class="summary__card summary__card--rec">
+        <div class="summary__label">May 6 was the breakout day</div>
+        <p class="summary__text"><strong>209 page loads and 142 unique visitors</strong> — driven by the Claude for Marketers Pt. 2 Workshop. Live events are the most powerful distribution channel, with comms sends driving smaller but meaningful spikes. <strong>Next step:</strong> Continue pairing skill library promotion with workshops and targeted comms as the core distribution playbook.</p>
+      </div>
+      <div class="summary__card summary__card--warn">
+        <div class="summary__label">48.7% conversion is strong, but 120 visitors left without downloading</div>
+        <p class="summary__text">Of those, 20 returned multiple times — a clear signal of interest without a clear on-ramp. <strong>Next step:</strong> Send a targeted Slack nudge to this group pointing them to the most popular skill as a starting point.</p>
+      </div>
+      <div class="summary__card summary__card--win">
+        <div class="summary__label">Branded Deck Generator is the standout skill</div>
+        <p class="summary__text">With <strong>57 downloads</strong> — nearly 2× the next closest. It validates that presentation work is the highest-felt pain point in the org. <strong>Next step:</strong> Feature it prominently in future comms and use it as the lead example when introducing new audiences to the library.</p>
+      </div>
+      <div class="summary__card summary__card--sent">
+        <div class="summary__label">General Marketing leads downloads (64%), but Lifecycle Marketing shows strong demand</div>
+        <p class="summary__text">With <strong>48 downloads and 21 tab clicks</strong>, Lifecycle is the most engaged non-GM discipline. <strong>Next step:</strong> Prioritize Lifecycle as the focus for the next skill development sprint.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- §03 Conversion funnel (was §02 — Key Insights moves up to §02) -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 03</div>
+      <h2 class="section__title">Conversion funnel</h2>
+      <p class="section__lede">From page visit to repeat download · five-stage view.</p>
+    </div>
+
+    <div class="card-frame card-frame--accent">
+      <div class="funnel">
+        <div class="funnel__step">
+          <div class="funnel__label">
+            <span class="funnel__name">Page visits</span>
+            <span class="funnel__detail">427 total visits</span>
+          </div>
+          <div class="funnel__bar-wrap">
+            <div class="funnel__bar" data-target="100%" style="background: linear-gradient(90deg, var(--super-blue), var(--super-blue-l));">427</div>
+          </div>
+        </div>
+        <div class="funnel__step">
+          <div class="funnel__label">
+            <span class="funnel__name">Unique visitors</span>
+            <span class="funnel__detail">234 people · 29% of audience</span>
+          </div>
+          <div class="funnel__bar-wrap">
+            <div class="funnel__bar" data-target="54.8%" style="background: linear-gradient(90deg, var(--agave-30), var(--super-blue-l)); color: var(--blueberry-110);">234</div>
+          </div>
+        </div>
+        <div class="funnel__step">
+          <div class="funnel__label">
+            <span class="funnel__name">Downloaded 1+ skill</span>
+            <span class="funnel__detail">114 visitors · 48.7%</span>
+          </div>
+          <div class="funnel__bar-wrap">
+            <div class="funnel__bar" data-target="26.7%" style="background: linear-gradient(90deg, var(--kiwi-50), #6EE7B7); color: var(--spearmint-110);">114</div>
+          </div>
+        </div>
+        <div class="funnel__step">
+          <div class="funnel__label">
+            <span class="funnel__name">Repeat visitors</span>
+            <span class="funnel__detail">66 people · 28% of visitors</span>
+          </div>
+          <div class="funnel__bar-wrap">
+            <div class="funnel__bar" data-target="15.5%" style="background: linear-gradient(90deg, var(--honey-40), #FDE68A); color: var(--honey-80);">66</div>
+          </div>
+        </div>
+        <div class="funnel__step">
+          <div class="funnel__label">
+            <span class="funnel__name">Repeat visitors who downloaded</span>
+            <span class="funnel__detail">46 people · 70% of returners</span>
+          </div>
+          <div class="funnel__bar-wrap">
+            <div class="funnel__bar" data-target="10.8%" style="background: linear-gradient(90deg, var(--super-blue-d), var(--super-blue));">46</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §04 Repeat visitors callout -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 04</div>
+      <h2 class="section__title">Repeat visitors &amp; high-intent signal</h2>
+      <p class="section__lede">The strongest indicator of Hub value — return rate.</p>
+    </div>
+
+    <div class="repeat-callout">
+      <div class="repeat-callout__big">
+        <div class="repeat-callout__val">70%</div>
+        <div class="repeat-callout__lbl">of returners<br>downloaded</div>
+      </div>
+      <div class="repeat-callout__detail">
+        <p style="margin-bottom: 12px;"><strong>66 visitors</strong> returned to the Hub on multiple days during the launch window. Of those, <strong>46 (70%)</strong> downloaded at least one skill — a much higher rate than the overall 48.7% download conversion.</p>
+        <p>This is the strongest signal in the data: <strong>people who come back, take action.</strong> The repeat-visit pattern suggests the Hub is being used as a tool, not just browsed once.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- §05 Daily Traffic -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 05</div>
+      <h2 class="section__title">Daily traffic — page loads</h2>
+      <p class="section__lede">Day-by-day pattern across the launch window.</p>
+    </div>
+
+    <div class="card-frame">
+      <div class="traffic-callouts">
+        <div class="traffic-callout traffic-callout--spike">
+          <span class="traffic-callout__marker">May 6</span>
+          <span><strong>209 loads · 142 unique visitors</strong> — driven by the Claude for Marketers Pt. 2 Workshop. Live events are the most powerful distribution channel.</span>
+        </div>
+        <div class="traffic-callout traffic-callout--steady">
+          <span class="traffic-callout__marker">Steady</span>
+          <span>Smaller spikes (e.g. Apr 30) driven by comms sent out to the team.</span>
+        </div>
+      </div>
+
+      <div class="traffic-chart">
+        <div class="traffic-chart__yaxis">
+          <span>0</span><span>50</span><span>100</span><span>150</span><span>200</span><span>250</span>
+        </div>
+        <!-- daily bars · max 250, height % = value / 250 * 100 -->
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="6"><span class="traffic-chart__bar-value">15</span></div>
+          <div class="traffic-chart__label">Apr 29</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="16"><span class="traffic-chart__bar-value">40</span></div>
+          <div class="traffic-chart__label">Apr 30</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="12"><span class="traffic-chart__bar-value">30</span></div>
+          <div class="traffic-chart__label">May 1</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="2"><span class="traffic-chart__bar-value">5</span></div>
+          <div class="traffic-chart__label">May 2</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="3"><span class="traffic-chart__bar-value">7</span></div>
+          <div class="traffic-chart__label">May 3</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="9"><span class="traffic-chart__bar-value">22</span></div>
+          <div class="traffic-chart__label">May 4</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="10"><span class="traffic-chart__bar-value">25</span></div>
+          <div class="traffic-chart__label">May 5</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar traffic-chart__bar--spike" data-h="84"><span class="traffic-chart__bar-value">209</span></div>
+          <div class="traffic-chart__label">May 6</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="8"><span class="traffic-chart__bar-value">20</span></div>
+          <div class="traffic-chart__label">May 7</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="12"><span class="traffic-chart__bar-value">30</span></div>
+          <div class="traffic-chart__label">May 8</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="2"><span class="traffic-chart__bar-value">5</span></div>
+          <div class="traffic-chart__label">May 9</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="3"><span class="traffic-chart__bar-value">8</span></div>
+          <div class="traffic-chart__label">May 10</div>
+        </div>
+        <div class="traffic-chart__bar-wrap">
+          <div class="traffic-chart__bar" data-h="6"><span class="traffic-chart__bar-value">15</span></div>
+          <div class="traffic-chart__label">May 11</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §06 Discipline breakdown (moved up per leadership feedback) -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 06</div>
+      <h2 class="section__title">Discipline breakdown</h2>
+      <p class="section__lede">Downloads by discipline · 314 total.</p>
+    </div>
+
+    <div class="discipline-layout">
+      <div class="donut-wrap">
+        <div class="donut"></div>
+        <div class="donut-legend">
+          <div class="donut-legend__item">
+            <span class="donut-legend__swatch" style="background:var(--super-blue);"></span>
+            General Marketing
+            <span class="donut-legend__count">64%</span>
+          </div>
+          <div class="donut-legend__item">
+            <span class="donut-legend__swatch" style="background:var(--kiwi-50);"></span>
+            Lifecycle Marketing
+            <span class="donut-legend__count">15%</span>
+          </div>
+          <div class="donut-legend__item">
+            <span class="donut-legend__swatch" style="background:var(--honey-40);"></span>
+            Product Marketing
+            <span class="donut-legend__count">11%</span>
+          </div>
+          <div class="donut-legend__item">
+            <span class="donut-legend__swatch" style="background:var(--tomato);"></span>
+            Creative Ops
+            <span class="donut-legend__count">9%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="discipline-grid">
+        <div class="discipline discipline--gm">
+          <div class="discipline__name">General Marketing</div>
+          <div class="discipline__downloads">202</div>
+          <div class="discipline__sub">downloads · 64% of total</div>
+          <div class="discipline__tabs">
+            <span class="discipline__tab-badge" style="background:var(--agave-20); color:var(--super-blue);">8</span> tab clicks
+          </div>
+        </div>
+        <div class="discipline discipline--life">
+          <div class="discipline__name">Lifecycle Marketing</div>
+          <div class="discipline__downloads">48</div>
+          <div class="discipline__sub">downloads · 15% of total</div>
+          <div class="discipline__tabs">
+            <span class="discipline__tab-badge" style="background:var(--olive-10); color:var(--spearmint-110);">21</span> tab clicks
+          </div>
+        </div>
+        <div class="discipline discipline--prod">
+          <div class="discipline__name">Product Marketing</div>
+          <div class="discipline__downloads">36</div>
+          <div class="discipline__sub">downloads · 11% of total</div>
+          <div class="discipline__tabs">
+            <span class="discipline__tab-badge" style="background:var(--honey-10); color:var(--honey-80);">26</span> tab clicks <span class="discipline__tab-warn">⚠</span>
+          </div>
+        </div>
+        <div class="discipline discipline--ops">
+          <div class="discipline__name">Creative Ops</div>
+          <div class="discipline__downloads">28</div>
+          <div class="discipline__sub">downloads · 9% of total</div>
+          <div class="discipline__tabs">
+            <span class="discipline__tab-badge" style="background:#FFE2D9; color:var(--watermelon-110);">16</span> tab clicks
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §07 Top skills by downloads (moved below Discipline) -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 07</div>
+      <h2 class="section__title">Top skills by downloads</h2>
+      <p class="section__lede">What's resonating · 11 skills tracked.</p>
+    </div>
+
+    <div class="card-frame skill-list--large">
+      <div class="skill-list">
+        <div class="skill-row skill-row--top">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Branded Deck Generator</span>
+            <span class="skill-row__count">57</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="100%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Daily Slack &amp; Outlook Briefing</span>
+            <span class="skill-row__count">44</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="77%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">D4D &amp; Experimentation</span>
+            <span class="skill-row__count">43</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="75%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Master Marketing Brief Generator</span>
+            <span class="skill-row__count">31</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="54%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Lifecycle Creative Brainstorming</span>
+            <span class="skill-row__count">31</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="54%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Creative Brief Generator</span>
+            <span class="skill-row__count">27</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="47%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Positioning &amp; Value Prop Generator</span>
+            <span class="skill-row__count">21</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="37%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Creative Branding Auditor</span>
+            <span class="skill-row__count">18</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="32%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">"One Intuit" Ecosystem Narrative</span>
+            <span class="skill-row__count">15</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="26%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Creative Scope Alignment</span>
+            <span class="skill-row__count">10</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="18%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">SOT Generator</span>
+            <span class="skill-row__count">10</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="18%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-row__head">
+            <span class="skill-row__name">Prototype Persona Testing Partner</span>
+            <span class="skill-row__count">7</span>
+          </div>
+          <div class="skill-row__bar-wrap"><div class="skill-row__bar" data-target="12%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §08 Top 3 themes from Hub feedback -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 08</div>
+      <h2 class="section__title">Top 3 feedback themes</h2>
+      <p class="section__lede">Areas of opportunity from the Hub launch.</p>
+    </div>
+
+    <div class="themes">
+      <div class="themes__col" style="grid-column: 1 / span 2;">
+        <div class="themes__col-title">Hub launch · areas of opportunity</div>
+        <div class="themes__item">
+          <div class="themes__rank">1</div>
+          <div class="themes__text"><strong>Convert browsers to downloaders</strong> — 51% of unique visitors visited but didn't download. The opportunity is to surface clearer "first skill to try" recommendations and reduce friction on the download step.</div>
+        </div>
+        <div class="themes__item">
+          <div class="themes__rank">2</div>
+          <div class="themes__text"><strong>Convert single-visit users to returners</strong> — 72% of visitors only came once. A second-visit nudge (email follow-up, "new this week" callout) could re-engage them.</div>
+        </div>
+        <div class="themes__item">
+          <div class="themes__rank">3</div>
+          <div class="themes__text"><strong>Audience reach</strong> — 29% of the 801-person total audience visited. The 71% who haven't seen the Hub yet is the next expansion opportunity.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §09 How to read -->
+  <section class="section reveal">
+    <div class="section__header">
+      <div class="section__num">§ 09</div>
+      <h2 class="section__title">How to read these numbers</h2>
+      <p class="section__lede">Three metrics. Hub analytics methodology.</p>
+    </div>
+    <div class="howto">
+      <div class="howto__card" data-card>
+        <div class="howto__head"><div class="howto__num">1</div><div class="howto__toggle">+</div></div>
+        <div class="howto__term">Unique Visitors</div>
+        <p class="howto__def">Distinct people who reached the Skills Hub between Apr 29 and May 11, 2026. Deduplicated across multiple sessions. <strong>234 of 801 total audience (29%).</strong></p>
+        <div class="howto__extra">
+          <div class="howto__extra-title">Worked example</div>
+          <div class="howto__formula">Total page visits:  427<br>Unique visitors:    234<br>Visits per person:  ~1.83<br><br>Audience reach:  234 / 801 = 29%</div>
+          <p class="howto__example">Visits per person above 1 means people are returning. The 1.83 average is healthy — typical content launches see ~1.2.</p>
+        </div>
+      </div>
+      <div class="howto__card" data-card>
+        <div class="howto__head"><div class="howto__num">2</div><div class="howto__toggle">+</div></div>
+        <div class="howto__term">Conversion Rate</div>
+        <p class="howto__def">Share of unique visitors who downloaded at least one skill. <strong>Conversion = downloaders ÷ unique visitors.</strong> 114 of 234 = 48.7%.</p>
+        <div class="howto__extra">
+          <div class="howto__extra-title">Formula &amp; example</div>
+          <div class="howto__formula">Conversion = Downloaders ÷ Visitors<br>= 114 / 234<br>= 48.7%</div>
+          <p class="howto__example">Healthy benchmark for an internal content hub is <strong>20–30%</strong>. At <strong>48.7%</strong>, the Hub is converting at nearly 2× typical rates.</p>
+        </div>
+      </div>
+      <div class="howto__card" data-card>
+        <div class="howto__head"><div class="howto__num">3</div><div class="howto__toggle">+</div></div>
+        <div class="howto__term">Repeat Visitors</div>
+        <p class="howto__def">Visitors who returned to the Hub on at least two different days during the launch window. <strong>66 of 234 (28%)</strong>. The clearest signal of utility — people coming back to use it.</p>
+        <div class="howto__extra">
+          <div class="howto__extra-title">Why it matters</div>
+          <div class="howto__formula">Repeat visitors:  66<br>Repeat rate:      28%<br>Of those, downloaded: 46 (70%)<br><br>Single-visit rate: 72%</div>
+          <p class="howto__example">Returners convert at <strong>70%</strong> vs the overall 48.7%. <strong>People who come back, take action.</strong> The opportunity is converting more single-visit users into returners.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__lockup">
+      <span class="footer__lockup-top">Marketing</span>
+      <span class="footer__lockup-bottom">Craft Development &amp; Capabilities</span>
+    </div>
+    <div>Intuit Confidential and Proprietary</div>
+    <div>Source: Skills Hub Analytics · Claude 10 Skills Taskforce</div>
+  </footer>
+</div>
+</div>
+
+<!-- ─── MODAL ─── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal__head">
+      <div>
+        <div class="modal__kicker" id="modal-kicker">Metric definition</div>
+        <h3 class="modal__title" id="modal-title">Metric</h3>
+      </div>
+      <button class="modal__close" id="modal-close">×</button>
+    </div>
+    <div class="modal__body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+  const modalContent = {
+    'nps-s1': {
+      kicker: 'Session 1 · NPS',
+      title: '+67 — Excellent',
+      body: `
+        <p class="modal__definition"><strong>Net Promoter Score</strong> is the industry-standard sentiment metric. NPS = % Promoters (9–10) minus % Detractors (0–6) on a 0–10 "likelihood to recommend" question.</p>
+        <div class="modal__section-title">How we got to +67</div>
+        <div class="modal__formula">
+          Session 1 live poll: <strong>n=67</strong><br><br>
+          Promoters (9–10):  <strong>~50  (74.6%)</strong><br>
+          Passives  (7–8):   ~12  (17.9%)<br>
+          Detractors (0–6):  ~5   (7.5%)<br><br>
+          NPS = 74.6% − 7.5% = <strong>+67</strong>
+        </div>
+        <div class="modal__section-title">Where this sits on the scale</div>
+        <div class="modal__benchmarks">
+          <div class="modal__benchmark modal__benchmark--ok"><div class="modal__bench-value">0 to +30</div><div class="modal__bench-label">Good</div></div>
+          <div class="modal__benchmark modal__benchmark--good"><div class="modal__bench-value">+30 to +50</div><div class="modal__bench-label">Great</div></div>
+          <div class="modal__benchmark modal__benchmark--exc"><div class="modal__bench-value">+50 to +100</div><div class="modal__bench-label">Excellent</div></div>
+        </div>
+        <p class="modal__example" style="margin-top:24px;">
+          <strong>+67</strong> places Session 1 firmly in the "excellent" band and close to world-class for an internal program. For context: Apple's NPS is around +60; top SaaS products land between +50 and +70.
+        </p>
+      `
+    },
+    'nps-s2': {
+      kicker: 'Session 2 · NPS · Combined',
+      title: '+47 — Strong',
+      body: `
+        <p class="modal__definition"><strong>Net Promoter Score</strong>, combined view: live poll (n=67) + post-survey (n=16) = <strong>n=83</strong>. This aggregates the in-room reaction with post-reflection responses.</p>
+        <div class="modal__section-title">How we got to +47</div>
+        <div class="modal__formula">
+          Session 2 combined: <strong>n=83</strong><br><br>
+          Promoters (9–10):  <strong>52  (62.7%)</strong><br>
+          Passives  (7–8):   18  (21.7%)<br>
+          Detractors (0–6):  13  (15.7%)<br><br>
+          NPS = 62.7% − 15.7% = <strong>+47</strong>
+        </div>
+        <div class="modal__section-title">Where this sits on the scale</div>
+        <div class="modal__benchmarks">
+          <div class="modal__benchmark modal__benchmark--ok"><div class="modal__bench-value">0 to +30</div><div class="modal__bench-label">Good</div></div>
+          <div class="modal__benchmark modal__benchmark--good"><div class="modal__bench-value">+30 to +50</div><div class="modal__bench-label">Great</div></div>
+          <div class="modal__benchmark modal__benchmark--exc"><div class="modal__bench-value">+50 to +100</div><div class="modal__bench-label">Excellent</div></div>
+        </div>
+        <p class="modal__example" style="margin-top:24px;">
+          <strong>+47</strong> is still strong — sitting right at the edge of "great" and "excellent." The 20-point drop from Session 1 reflects the harder hands-on format. <strong>Detractor count rose from ~5 to 13</strong>, driven mostly by tech friction during the live exercise.
+        </p>
+      `
+    },
+    't2b-s1': {
+      kicker: 'Session 1 · T2B',
+      title: '93% — Exceptional',
+      body: `
+        <p class="modal__definition"><strong>Top 2 Box</strong> is a confidence metric. For each 1–5 self-efficacy question ("I can build a skill," "I can use Cowork"), T2B = share of respondents giving 4 or 5. Session T2B = average across the 3 ranking questions.</p>
+        <div class="modal__section-title">How we got to 93%</div>
+        <div class="modal__formula">
+          Per question: <strong>(count 4s + 5s) ÷ n</strong><br>
+          Session T2B = avg across the 3 Qs<br><br>
+          Q1 (build a skill):  ~95%<br>
+          Q2 (use Cowork):     ~94%<br>
+          Q3 (Chat/Skills/Cowork choice):  ~90%<br><br>
+          T2B = <strong>~93%</strong>
+        </div>
+        <p class="modal__example" style="margin-top:24px;">
+          93% is exceptional and reflects the lecture format — people heard concepts explained and felt they understood them. The real test of self-efficacy comes when they try to apply it (which is what Session 2 measured).
+        </p>
+      `
+    },
+    't2b-s2': {
+      kicker: 'Session 2 · T2B · Combined',
+      title: '65% — Strong',
+      body: `
+        <p class="modal__definition"><strong>Top 2 Box</strong>, combined live poll (n=67) + post-survey (n=16) = <strong>n=83</strong>.</p>
+        <div class="modal__section-title">How we got to 65%</div>
+        <div class="modal__formula">
+          Per question: <strong>(count 4s + 5s) ÷ 83</strong><br>
+          Session T2B = avg across the 3 Qs<br><br>
+          Q1 (build a skill):       53/83 = <strong>63.9%</strong><br>
+          Q2 (use Cowork):          57/83 = <strong>68.7%</strong><br>
+          Q3 (Chat/Skills/Cowork):  52/83 = <strong>62.7%</strong><br><br>
+          T2B = avg = <strong>65.1%</strong>
+        </div>
+        <p class="modal__example" style="margin-top:24px;">
+          The 28-point drop is the most important number to interpret carefully. <strong>It does not mean the workshop was 28 points worse.</strong> It means people are honestly rating their hands-on confidence — and self-efficacy is harder to claim when you've actually tried the thing.
+        </p>
+      `
+    },
+    'n-s1': {
+      kicker: 'Session 1 · Sample size',
+      title: '67 respondents',
+      body: `
+        <p class="modal__definition">Session 1 survey responses came from the in-session live poll only. No separate post-survey was run for Session 1.</p>
+        <div class="modal__section-title">Coverage</div>
+        <div class="modal__formula">
+          Live poll responses:  <strong>67</strong><br>
+          Unique participants:  450<br>
+          Response rate:         ~15%<br><br>
+          <em>Standard for live in-session polls during a lecture-format event.</em>
+        </div>
+      `
+    },
+    'n-s2': {
+      kicker: 'Session 2 · Sample size',
+      title: '83 respondents (combined)',
+      body: `
+        <p class="modal__definition">Session 2 aggregates two data sources: the live poll during the hands-on session and a post-session survey emailed afterward.</p>
+        <div class="modal__section-title">How the 83 breaks down</div>
+        <div class="modal__formula">
+          Live poll responses:    <strong>67</strong><br>
+          Post-survey responses:   <strong>16</strong><br>
+          Combined n:              <strong>83</strong><br><br>
+          Unique participants:     301<br>
+          Combined response rate: ~28%
+        </div>
+        <p class="modal__example" style="margin-top:24px;">
+          Combining both sources gives a fuller picture: live poll captures gut reaction during the hands-on, post-survey captures considered reflection. Methodology weights the in-room reaction more heavily (67 of 83 = 81%).
+        </p>
+      `
+    }
+  };
+
+  // Tab switching
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.toggle('is-active', t === tab));
+      panels.forEach(p => p.classList.toggle('is-active', p.id === `tab-${target}`));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(triggerReveals, 100);
+      // Re-trigger funnel animations
+      setTimeout(animateFunnels, 200);
+    });
+  });
+
+  // Counters
+  function animateCount(el) {
+    const target = parseInt(el.dataset.count, 10);
+    if (isNaN(target)) return;
+    const suffix = el.dataset.suffix || '';
+    const duration = 1600;
+    const startTime = performance.now();
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+    const isPercent = el.parentElement.querySelector('.reach__label')?.textContent.toLowerCase().includes('conversion');
+    function step(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const value = Math.round(target * easeOut(progress));
+      el.textContent = suffix ? (value + suffix) : (isPercent ? value + '%' : value.toLocaleString());
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = suffix ? (target + suffix) : (isPercent ? target + '%' : target.toLocaleString());
+    }
+    requestAnimationFrame(step);
+  }
+
+  // Reveal observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        entry.target.querySelectorAll('.reach__num[data-count]').forEach(el => {
+          if (!el.dataset.animated) {
+            el.dataset.animated = '1';
+            animateCount(el);
+          }
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  function triggerReveals() {
+    document.querySelectorAll('.reveal').forEach(el => {
+      if (!el.classList.contains('is-visible')) observer.observe(el);
+    });
+  }
+  triggerReveals();
+
+  // NPS arc indicators
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('.nps-arc__indicator').forEach(el => {
+        el.style.left = el.dataset.pos + '%';
+      });
+    }, 400);
+  });
+
+  // Modal
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modalKicker = document.getElementById('modal-kicker');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body');
+  const modalClose = document.getElementById('modal-close');
+
+  function openModal(key) {
+    const data = modalContent[key];
+    if (!data) return;
+    modalKicker.textContent = data.kicker;
+    modalTitle.textContent = data.title;
+    modalBody.innerHTML = data.body;
+    modalOverlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modalOverlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('[data-modal]').forEach(el => {
+    el.addEventListener('click', () => openModal(el.dataset.modal));
+  });
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOverlay.classList.contains('is-open')) closeModal();
+  });
+
+  // Legend filter
+  const legendItems = document.querySelectorAll('#legend .friction__legend-item');
+  const frictionRows = document.querySelectorAll('#tab-workshops .friction__row');
+  let activeCategories = new Set();
+  legendItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const cat = item.dataset.cat;
+      if (activeCategories.has(cat)) {
+        activeCategories.delete(cat);
+        item.classList.remove('is-active');
+      } else {
+        activeCategories.add(cat);
+        item.classList.add('is-active');
+      }
+      frictionRows.forEach(row => {
+        if (activeCategories.size === 0) row.classList.remove('is-dimmed');
+        else row.classList.toggle('is-dimmed', !activeCategories.has(row.dataset.cat));
+      });
+      legendItems.forEach(li => {
+        if (activeCategories.size === 0) li.classList.remove('is-filtered');
+        else li.classList.toggle('is-filtered', !activeCategories.has(li.dataset.cat));
+      });
+    });
+  });
+
+  // Row expand
+  frictionRows.forEach(row => {
+    row.addEventListener('click', () => {
+      frictionRows.forEach(r => { if (r !== row) r.classList.remove('is-active'); });
+      row.classList.toggle('is-active');
+    });
+  });
+
+  // How-to cards
+  document.querySelectorAll('[data-card]').forEach(card => {
+    card.addEventListener('click', () => {
+      const group = card.parentElement;
+      group.querySelectorAll('[data-card]').forEach(c => {
+        if (c !== card) c.classList.remove('is-expanded');
+      });
+      card.classList.toggle('is-expanded');
+    });
+  });
+
+  // Cascade friction bars
+  const frictionSection = document.querySelector('#tab-workshops .friction');
+  if (frictionSection) {
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.animated) {
+          entry.target.dataset.animated = '1';
+          const bars = entry.target.querySelectorAll('.friction__bar');
+          bars.forEach((bar, i) => {
+            setTimeout(() => { bar.style.width = bar.dataset.target; }, 150 + i * 80);
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    barObserver.observe(frictionSection);
+  }
+
+  // Funnel bar animation (Hub tab)
+  function animateFunnels() {
+    document.querySelectorAll('.funnel__bar').forEach((bar, i) => {
+      if (!bar.dataset.animated) {
+        setTimeout(() => {
+          bar.style.width = bar.dataset.target;
+          bar.dataset.animated = '1';
+        }, 200 + i * 150);
+      }
+    });
+  }
+  // Also trigger funnels on scroll into view
+  const funnelObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateFunnels();
+        funnelObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.funnel').forEach(f => funnelObserver.observe(f));
+
+  // Animate skill bars on scroll into view
+  const skillBarObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.animated) {
+        entry.target.dataset.animated = '1';
+        const bars = entry.target.querySelectorAll('.skill-row__bar');
+        bars.forEach((bar, i) => {
+          setTimeout(() => { bar.style.width = bar.dataset.target; }, 100 + i * 60);
+        });
+        skillBarObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.skill-list').forEach(s => skillBarObserver.observe(s));
+
+  // Animate daily traffic bars on scroll into view
+  const trafficObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.animated) {
+        entry.target.dataset.animated = '1';
+        const bars = entry.target.querySelectorAll('.traffic-chart__bar');
+        bars.forEach((bar, i) => {
+          setTimeout(() => {
+            bar.style.height = bar.dataset.h + '%';
+          }, 100 + i * 50);
+        });
+        trafficObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.traffic-chart').forEach(c => trafficObserver.observe(c));
+</script>
+</body>
+</html>
