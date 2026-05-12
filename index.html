@@ -120,11 +120,6 @@
   /* ─── Masthead ─── */
   .masthead {
     border-top: 4px solid var(--super-blue); padding-top: 28px; margin-bottom: 40px;
-    display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center;
-  }
-  @media (max-width: 760px) {
-    .masthead { grid-template-columns: 1fr; }
-    .masthead__faces { justify-self: start; transform: scale(0.85); transform-origin: left top; }
   }
   .masthead__copy { min-width: 0; }
   .masthead__kicker {
@@ -149,32 +144,6 @@
   .masthead__byline span:not(:last-child)::after {
     content: '·'; color: var(--muted-soft); margin-left: 20px;
   }
-
-  /* ─── Faces cluster — MCD&C team logo ─── */
-  .masthead__faces {
-    width: 220px; height: 140px;
-    flex-shrink: 0;
-  }
-  .face-cluster {
-    width: 100%; height: 100%;
-    overflow: visible;
-  }
-  .face-cluster__circle--cyan   { fill: var(--agave-30); }
-  .face-cluster__circle--green  { fill: var(--kiwi-50); }
-  .face-cluster__circle--orange { fill: var(--tomato); }
-  .face-cluster__circle--yellow { fill: var(--honey-40); }
-  .face-cluster__stroke {
-    fill: none; stroke: #1a1a1a; stroke-width: 2.2;
-    stroke-linecap: round; stroke-linejoin: round;
-  }
-  .face-cluster__face {
-    transform-box: fill-box; transform-origin: center;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .face-cluster:hover .face-cluster__face--cyan   { transform: translateY(-3px) rotate(-3deg); }
-  .face-cluster:hover .face-cluster__face--green  { transform: translateY(-4px) rotate(2deg); }
-  .face-cluster:hover .face-cluster__face--orange { transform: translateY(-3px) rotate(3deg); }
-  .face-cluster:hover .face-cluster__face--yellow { transform: translateY(-3px) rotate(-2deg); }
 
   /* ─── Headline ─── */
   .headline {
@@ -969,6 +938,246 @@
   }
   .footer__lockup-bottom { font-size: 12px; font-weight: 400; color: var(--super-blue); }
 
+  /* ═══════════════════════════════════════════════════════════
+     RESPONSIVE — TABLET ≤ 880px
+     ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 880px) {
+    .shell { padding: 32px 24px 60px; }
+    .brandbar { padding: 14px 24px; gap: 16px; flex-wrap: wrap; }
+    .live-pulse { margin-left: 0; }
+    .masthead__title { font-size: 38px; }
+    .headline { padding: 28px 28px; }
+    .headline__text { font-size: 22px; }
+    .reach { grid-template-columns: 1fr 1fr; }
+    .reach__cell--hero { grid-column: 1 / -1; }
+    .reach__num { font-size: 72px; }
+    .reach__cell:not(.reach__cell--hero) .reach__num { font-size: 48px; }
+    .compare__row {
+      grid-template-columns: 1.2fr 1fr 1fr 0.7fr 0.8fr 1.4fr;
+    }
+    .compare__cell { padding: 12px 14px; font-size: 12px; }
+    .compare__cell--metric { font-size: 24px; }
+    .friction__row { grid-template-columns: 200px 40px 1fr 100px; gap: 12px; }
+    .friction__label { font-size: 12.5px; }
+    .howto { grid-template-columns: 1fr 1fr; }
+    .summary__card { grid-template-columns: 160px 1fr; gap: 20px; padding: 20px 24px; }
+    .section__title { font-size: 22px; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     RESPONSIVE — PHONE ≤ 560px (iPhone + Android)
+     ═══════════════════════════════════════════════════════════ */
+  @media (max-width: 560px) {
+    body { font-size: 14px; }
+    .shell { padding: 20px 16px 48px; }
+
+    /* Brand bar — stack vertically */
+    .brandbar {
+      padding: 12px 16px; gap: 10px;
+      flex-direction: column; align-items: stretch;
+    }
+    .lockup { align-items: flex-start; }
+    .live-pulse { align-self: flex-start; margin-left: 0; }
+    .brandbar__tabs { margin-left: 0; justify-content: stretch; gap: 6px; }
+    .tab-btn { flex: 1; padding: 10px 12px; font-size: 12.5px; text-align: center; }
+
+    /* Masthead */
+    .masthead { padding-top: 20px; margin-bottom: 28px; }
+    .masthead__kicker { font-size: 10px; margin-bottom: 12px; }
+    .masthead__kicker::after { max-width: 80px; }
+    .masthead__title { font-size: 28px; margin-bottom: 14px; }
+    .masthead__byline {
+      flex-direction: column; gap: 4px; font-size: 12px;
+    }
+    .masthead__byline span:not(:last-child)::after { display: none; }
+
+    /* Headline pull-quote */
+    .headline { padding: 22px 20px; margin-bottom: 36px; border-radius: 8px; }
+    .headline__kicker { font-size: 10px; margin-bottom: 8px; }
+    .headline__text { font-size: 17px; line-height: 1.35; }
+
+    /* Section headers */
+    .section { margin-bottom: 40px; }
+    .section__header {
+      flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 20px;
+    }
+    .section__num { font-size: 10px; }
+    .section__title { font-size: 22px; }
+    .section__lede {
+      margin-left: 0; text-align: left; max-width: 100%; font-size: 13px;
+    }
+
+    /* Total reach — stack all three cards */
+    .reach { grid-template-columns: 1fr; gap: 12px; }
+    .reach__cell, .reach__cell--hero { grid-column: 1; padding: 24px 20px; }
+    .reach__cell--hero::before { left: 20px; top: 20px; }
+    .reach__num { font-size: 64px; }
+    .reach__cell:not(.reach__cell--hero) .reach__num { font-size: 48px; }
+    .reach__sub { font-size: 12px; }
+
+    /* Venn diagram — scale down */
+    .venn__svg { max-width: 200px; }
+    .venn__legend { font-size: 11.5px; }
+
+    /* Comparison table — convert to stacked cards */
+    .compare { border-radius: 8px; }
+    .compare__row--head { display: none; }
+    .compare__row {
+      grid-template-columns: 1fr; gap: 0;
+      padding: 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .compare__row:last-child:not(.compare__methodology) { border-bottom: none; }
+    .compare__cell {
+      padding: 8px 0; border-right: none; border-bottom: 1px solid var(--rule-soft);
+      flex-direction: row; justify-content: space-between; align-items: center;
+    }
+    .compare__cell:last-child { border-bottom: none; }
+    .compare__cell--label {
+      background: transparent; padding-bottom: 12px;
+      flex-direction: column; align-items: flex-start; gap: 6px;
+    }
+    .compare__cell--label .label-main { font-size: 15px; }
+    .compare__cell::before {
+      content: attr(data-label);
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted);
+    }
+    .compare__cell--label::before { display: none; }
+    .compare__cell--metric {
+      font-size: 24px; justify-content: space-between;
+      padding: 10px 0; cursor: pointer;
+    }
+    .compare__cell--metric .metric-value { font-size: 24px; }
+    .compare__cell--metric .nps-arc { width: 70px; }
+    .compare__cell--delta, .compare__cell--avg {
+      background: transparent; font-size: 14px; justify-content: space-between;
+      padding: 8px 0;
+    }
+    .compare__cell--insight { font-size: 12px; padding-top: 8px; }
+    .compare__methodology { font-size: 11px; padding: 12px 16px; }
+
+    /* Friction signals — stack within rows */
+    .friction__legend { gap: 6px 8px; }
+    .friction__legend-item { padding: 5px 10px; font-size: 11px; }
+    .friction__hint-text { font-size: 11.5px; margin-bottom: 14px; }
+    .friction__row {
+      grid-template-columns: 1fr auto;
+      gap: 8px 12px;
+      padding: 12px;
+    }
+    .friction__row:hover { padding-left: 12px; }
+    .friction__label { font-size: 13px; grid-column: 1; }
+    .friction__count {
+      font-size: 18px; text-align: right; grid-column: 2; grid-row: 1;
+    }
+    .friction__bar-wrap {
+      grid-column: 1 / -1; height: 18px; margin-top: 2px;
+    }
+    .friction__category {
+      grid-column: 1 / -1; text-align: left; font-size: 9.5px;
+    }
+
+    /* Themes — stack columns */
+    .themes { grid-template-columns: 1fr; gap: 12px; }
+    .themes__col { padding: 20px; }
+    .themes__rank { font-size: 26px; width: 26px; }
+    .themes__text { font-size: 13px; }
+
+    /* How to read cards — stack */
+    .howto { grid-template-columns: 1fr; gap: 12px; }
+    .howto__card { padding: 20px; }
+    .howto__num { font-size: 36px; }
+
+    /* Executive summary — stack label above text */
+    .summary__card {
+      grid-template-columns: 1fr; gap: 8px; padding: 20px 22px;
+    }
+    .summary__label { font-size: 15px; }
+    .summary__text { font-size: 13px; }
+    .summary__text ol { margin-left: 18px; }
+
+    /* Funnel — Hub tab */
+    .card-frame { padding: 18px; border-radius: 8px; }
+    .funnel { gap: 12px; }
+    .funnel__label { font-size: 12px; }
+    .funnel__detail { font-size: 11px; }
+    .funnel__bar-wrap { height: 30px; }
+    .funnel__bar { font-size: 12px; padding-left: 12px; }
+
+    /* Repeat callout */
+    .repeat-callout {
+      grid-template-columns: 1fr; gap: 16px; padding: 20px;
+    }
+    .repeat-callout__val { font-size: 48px; }
+    .repeat-callout__detail { font-size: 13px; }
+
+    /* Daily traffic chart — compact mobile layout */
+    .traffic-chart {
+      grid-template-columns: 20px repeat(13, 1fr);
+      gap: 2px; height: 160px;
+      padding: 12px 0 0;
+    }
+    .traffic-chart__yaxis { font-size: 7.5px; width: 18px; left: -2px; }
+    .traffic-chart__bar-wrap { gap: 2px; }
+    .traffic-chart__bar { max-width: 14px; }
+    .traffic-chart__label {
+      font-size: 7px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      white-space: nowrap;
+      padding-top: 2px;
+      align-self: center;
+    }
+    .traffic-chart__bar-value { font-size: 7.5px; top: -10px; }
+    .traffic-callouts { font-size: 12px; margin-bottom: 12px; }
+    .traffic-callout__marker { font-size: 9px; padding: 2px 6px; }
+    .traffic-callout { padding: 6px 0; gap: 8px; }
+
+    /* Top skills — keep larger fonts but compact */
+    .skill-list--large .skill-row { padding: 12px; }
+    .skill-list--large .skill-row__name { font-size: 14px; }
+    .skill-list--large .skill-row__count { font-size: 18px; }
+    .skill-list--large .skill-row__bar-wrap { height: 10px; }
+
+    /* Discipline layout — stack */
+    .discipline-layout { grid-template-columns: 1fr; gap: 16px; }
+    .donut-wrap {
+      flex-direction: column; gap: 16px; padding: 20px;
+    }
+    .donut { width: 140px; height: 140px; }
+    .donut::after { inset: 24px; }
+    .donut-legend { width: 100%; }
+    .discipline-grid { grid-template-columns: 1fr; gap: 10px; }
+    .discipline { padding: 16px; }
+    .discipline__downloads { font-size: 30px; }
+
+    /* Modal */
+    .modal { border-radius: 10px; max-height: 88vh; }
+    .modal__head { padding: 22px 22px 12px; gap: 12px; }
+    .modal__title { font-size: 22px; }
+    .modal__body { padding: 6px 22px 24px; }
+    .modal__definition { font-size: 13.5px; }
+    .modal__formula { font-size: 11.5px; padding: 14px 16px; }
+    .modal__benchmarks { grid-template-columns: 1fr; gap: 8px; }
+
+    /* Footer */
+    .footer {
+      flex-direction: column; align-items: flex-start; gap: 8px;
+      margin-top: 48px; font-size: 10.5px;
+    }
+  }
+
+  /* Extra-small phones (iPhone SE, narrow Android) ≤ 380px */
+  @media (max-width: 380px) {
+    .masthead__title { font-size: 24px; }
+    .headline__text { font-size: 15px; }
+    .section__title { font-size: 20px; }
+    .reach__num { font-size: 56px; }
+    .traffic-chart { height: 150px; }
+    .traffic-chart__label { font-size: 7px; }
+  }
+
   /* ─── Print ─── */
   @media print {
     .brandbar, .modal-overlay { display: none; }
@@ -1015,56 +1224,9 @@
       <div class="masthead__byline">
         <span>Sessions 1 &amp; 2</span>
         <span>Apr 22 + May 6, 2026</span>
-        <span>Owner: Sylvia · Maria</span>
+        <span>Owners: Maria Boukhval &amp; Sylvia Luong</span>
         <span>Source: Master Tracker</span>
       </div>
-    </div>
-    <div class="masthead__faces" aria-label="Marketing Craft Development &amp; Capabilities team mark">
-      <svg class="face-cluster" viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg" role="img">
-        <!-- Cyan face — bottom-left -->
-        <g class="face-cluster__face face-cluster__face--cyan">
-          <circle class="face-cluster__circle--cyan" cx="38" cy="88" r="32"/>
-          <!-- Squinty content eyes: v shapes -->
-          <path class="face-cluster__stroke" d="M 24 82 L 28 87 L 32 82"/>
-          <path class="face-cluster__stroke" d="M 42 82 L 46 87 L 50 82"/>
-          <!-- Small upturned smile -->
-          <path class="face-cluster__stroke" d="M 28 96 Q 37 102 46 96"/>
-        </g>
-        <!-- Green face — top-center -->
-        <g class="face-cluster__face face-cluster__face--green">
-          <circle class="face-cluster__circle--green" cx="92" cy="42" r="36"/>
-          <!-- Dot eyes -->
-          <circle cx="82" cy="36" r="2.2" fill="#1a1a1a"/>
-          <circle cx="102" cy="36" r="2.2" fill="#1a1a1a"/>
-          <!-- Tiny nose hint -->
-          <path class="face-cluster__stroke" d="M 92 42 L 94 46 L 91 47" stroke-width="1.8"/>
-          <!-- Wide friendly smile -->
-          <path class="face-cluster__stroke" d="M 78 52 Q 92 64 106 52"/>
-        </g>
-        <!-- Yellow face — bottom-center -->
-        <g class="face-cluster__face face-cluster__face--yellow">
-          <circle class="face-cluster__circle--yellow" cx="108" cy="105" r="28"/>
-          <!-- Squint happy eyes -->
-          <path class="face-cluster__stroke" d="M 98 100 Q 101 96 104 100"/>
-          <path class="face-cluster__stroke" d="M 112 100 Q 115 96 118 100"/>
-          <!-- Open-mouth toothy grin: half-circle with horizontal tooth line -->
-          <path class="face-cluster__stroke" d="M 100 108 Q 108 120 116 108 Z" fill="#ffffff"/>
-          <path class="face-cluster__stroke" d="M 100 108 L 116 108"/>
-        </g>
-        <!-- Orange face — top-right with glasses -->
-        <g class="face-cluster__face face-cluster__face--orange">
-          <circle class="face-cluster__circle--orange" cx="170" cy="52" r="34"/>
-          <!-- Round glasses: two circles + bridge -->
-          <circle cx="160" cy="48" r="6" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-          <circle cx="180" cy="48" r="6" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-          <path class="face-cluster__stroke" d="M 166 48 L 174 48" stroke-width="1.8"/>
-          <!-- Eyes inside glasses (dots) -->
-          <circle cx="160" cy="48" r="1.6" fill="#1a1a1a"/>
-          <circle cx="180" cy="48" r="1.6" fill="#1a1a1a"/>
-          <!-- Subtle smile -->
-          <path class="face-cluster__stroke" d="M 160 62 Q 170 68 180 62"/>
-        </g>
-      </svg>
     </div>
   </header>
 
@@ -1186,39 +1348,39 @@
           <span class="label-main">NPS (combined)</span>
           <span class="metric-def-chip metric-def-chip--pulse">%Promoters (9–10) − %Detractors (0–6)</span>
         </div>
-        <div class="compare__cell compare__cell--metric" data-modal="nps-s1">
+        <div class="compare__cell compare__cell--metric" data-modal="nps-s1" data-label="Session 1 · Lecture">
           <span class="metric-value">+67</span>
           <div class="nps-arc"><div class="nps-arc__indicator" data-pos="83.5"></div></div>
         </div>
-        <div class="compare__cell compare__cell--metric" data-modal="nps-s2">
+        <div class="compare__cell compare__cell--metric" data-modal="nps-s2" data-label="Session 2 · Hands-on">
           <span class="metric-value">+47</span>
           <div class="nps-arc"><div class="nps-arc__indicator" data-pos="73.5"></div></div>
         </div>
-        <div class="compare__cell compare__cell--delta">−20</div>
-        <div class="compare__cell compare__cell--avg">+57</div>
-        <div class="compare__cell compare__cell--insight">Strong on both. The drop reflects the harder hands-on format, not loss of value.</div>
+        <div class="compare__cell compare__cell--delta" data-label="Δ S2 vs S1">−20</div>
+        <div class="compare__cell compare__cell--avg" data-label="Series avg">+57</div>
+        <div class="compare__cell compare__cell--insight" data-label="What it tells us">Strong on both. The drop reflects the harder hands-on format, not loss of value.</div>
       </div>
       <div class="compare__row">
         <div class="compare__cell compare__cell--label">
           <span class="label-main">T2B (combined)</span>
           <span class="metric-def-chip metric-def-chip--pulse">Avg share rating 4 or 5 on 1–5</span>
         </div>
-        <div class="compare__cell compare__cell--metric" data-modal="t2b-s1"><span class="metric-value">93%</span></div>
-        <div class="compare__cell compare__cell--metric" data-modal="t2b-s2"><span class="metric-value">65%</span></div>
-        <div class="compare__cell compare__cell--delta">−28pp</div>
-        <div class="compare__cell compare__cell--avg">79%</div>
-        <div class="compare__cell compare__cell--insight">Same pattern. Hands-on confidence is harder to rate 4–5 in the moment.</div>
+        <div class="compare__cell compare__cell--metric" data-modal="t2b-s1" data-label="Session 1 · Lecture"><span class="metric-value">93%</span></div>
+        <div class="compare__cell compare__cell--metric" data-modal="t2b-s2" data-label="Session 2 · Hands-on"><span class="metric-value">65%</span></div>
+        <div class="compare__cell compare__cell--delta" data-label="Δ S2 vs S1">−28pp</div>
+        <div class="compare__cell compare__cell--avg" data-label="Series avg">79%</div>
+        <div class="compare__cell compare__cell--insight" data-label="What it tells us">Same pattern. Hands-on confidence is harder to rate 4–5 in the moment.</div>
       </div>
       <div class="compare__row">
         <div class="compare__cell compare__cell--label">
           <span class="label-main">Total respondents (n)</span>
           <span class="metric-def-chip">Live poll + post-survey</span>
         </div>
-        <div class="compare__cell compare__cell--metric" data-modal="n-s1"><span class="metric-value" style="font-size:24px;">67</span></div>
-        <div class="compare__cell compare__cell--metric" data-modal="n-s2"><span class="metric-value" style="font-size:24px;">83</span></div>
-        <div class="compare__cell compare__cell--delta">+16</div>
-        <div class="compare__cell compare__cell--avg">75</div>
-        <div class="compare__cell compare__cell--insight">Session 2 added 16 post-survey responses on top of 67 live-poll responses.</div>
+        <div class="compare__cell compare__cell--metric" data-modal="n-s1" data-label="Session 1 · Lecture"><span class="metric-value" style="font-size:24px;">67</span></div>
+        <div class="compare__cell compare__cell--metric" data-modal="n-s2" data-label="Session 2 · Hands-on"><span class="metric-value" style="font-size:24px;">83</span></div>
+        <div class="compare__cell compare__cell--delta" data-label="Δ S2 vs S1">+16</div>
+        <div class="compare__cell compare__cell--avg" data-label="Series avg">75</div>
+        <div class="compare__cell compare__cell--insight" data-label="What it tells us">Session 2 added 16 post-survey responses on top of 67 live-poll responses.</div>
       </div>
       <div class="compare__methodology">
         <strong>Methodology</strong>
@@ -1401,43 +1563,10 @@
       <h1 class="masthead__title"><strong>Skills Library</strong> — Launch Analytics</h1>
       <div class="masthead__byline">
         <span>Apr 29 – May 11, 2026</span>
-        <span>Owner: Sylvia</span>
+        <span>Owners: Maria Boukhval &amp; Sylvia Luong</span>
         <span>growyourcraft.intuit.com/craft/gen-ai</span>
         <span>Source: Hub Analytics</span>
       </div>
-    </div>
-    <div class="masthead__faces" aria-label="Marketing Craft Development &amp; Capabilities team mark">
-      <svg class="face-cluster" viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg" role="img">
-        <g class="face-cluster__face face-cluster__face--cyan">
-          <circle class="face-cluster__circle--cyan" cx="38" cy="88" r="32"/>
-          <path class="face-cluster__stroke" d="M 24 82 L 28 87 L 32 82"/>
-          <path class="face-cluster__stroke" d="M 42 82 L 46 87 L 50 82"/>
-          <path class="face-cluster__stroke" d="M 28 96 Q 37 102 46 96"/>
-        </g>
-        <g class="face-cluster__face face-cluster__face--green">
-          <circle class="face-cluster__circle--green" cx="92" cy="42" r="36"/>
-          <circle cx="82" cy="36" r="2.2" fill="#1a1a1a"/>
-          <circle cx="102" cy="36" r="2.2" fill="#1a1a1a"/>
-          <path class="face-cluster__stroke" d="M 92 42 L 94 46 L 91 47" stroke-width="1.8"/>
-          <path class="face-cluster__stroke" d="M 78 52 Q 92 64 106 52"/>
-        </g>
-        <g class="face-cluster__face face-cluster__face--yellow">
-          <circle class="face-cluster__circle--yellow" cx="108" cy="105" r="28"/>
-          <path class="face-cluster__stroke" d="M 98 100 Q 101 96 104 100"/>
-          <path class="face-cluster__stroke" d="M 112 100 Q 115 96 118 100"/>
-          <path class="face-cluster__stroke" d="M 100 108 Q 108 120 116 108 Z" fill="#ffffff"/>
-          <path class="face-cluster__stroke" d="M 100 108 L 116 108"/>
-        </g>
-        <g class="face-cluster__face face-cluster__face--orange">
-          <circle class="face-cluster__circle--orange" cx="170" cy="52" r="34"/>
-          <circle cx="160" cy="48" r="6" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-          <circle cx="180" cy="48" r="6" fill="none" stroke="#1a1a1a" stroke-width="2"/>
-          <path class="face-cluster__stroke" d="M 166 48 L 174 48" stroke-width="1.8"/>
-          <circle cx="160" cy="48" r="1.6" fill="#1a1a1a"/>
-          <circle cx="180" cy="48" r="1.6" fill="#1a1a1a"/>
-          <path class="face-cluster__stroke" d="M 160 62 Q 170 68 180 62"/>
-        </g>
-      </svg>
     </div>
   </header>
 
@@ -1466,7 +1595,7 @@
         <div class="reach__label">% of TAM reached</div>
         <div class="reach__num" data-count="29" data-suffix="%">0</div>
         <p class="reach__sub">234 of 801 total addressable marketers reached the Hub in the launch window.</p>
-        <p class="reach__note"><strong>Note:</strong> Excludes Google Analytics data, which is aggregate-only and can't be matched to individual visitors against the TAM list.</p>
+        <p class="reach__note"><strong>Note:</strong> This metric is underrepresented due to the fact that it does not include data on unique marketers who visited the Skills Hub between 4/21 launch – 4/28, due to tracking analytics not yet being available at the time.</p>
       </div>
       <div class="reach__cell">
         <div class="reach__label">Repeat visitors</div>
